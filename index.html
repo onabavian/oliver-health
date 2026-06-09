@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Oliver Health">
+<meta name="theme-color" content="#0D6E52">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.svg">
+<title>Oliver Health</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --g:#0D6E52;--gl:#E1F5EE;--gc:#085041;
+  --b:#185FA5;--bl:#E6F1FB;--bc:#0C447C;
+  --p:#534AB7;--pl:#EEEDFE;--pc:#3C3489;
+  --a:#B07115;--al:#FAEEDA;--ac:#633806;
+  --r:#A32D2D;--rl:#FCEBEB;--rc:#791F1F;
+  --t:#1a1a1a;--tm:#666;--bdr:#e5e5e5;--bg:#f5f5f5;--wh:#fff;
+  --rad:12px;--rads:8px
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.5;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+.panel{display:none;padding:20px 16px 32px;animation:fi .15s ease}
+.panel.active{display:block}
+@keyframes fi{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
+.p-food h1{color:var(--g)}.p-drug h1{color:var(--b)}.p-supps h1{color:var(--p)}
+.p-out h1{color:var(--a)}.p-prep h1{color:var(--a)}.p-shop h1{color:var(--g)}
+.sec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);margin:20px 0 8px}
+.rows{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);overflow:hidden;margin-bottom:8px}
+.row{padding:12px 15px;border-bottom:1px solid var(--bdr)}
+.row:last-child{border-bottom:none}
+.rt{font-size:15px;font-weight:500}
+.rs{font-size:13px;color:var(--tm);margin-top:2px;line-height:1.5}
+.rskip{font-size:13px;color:var(--rc);margin-top:3px}
+.tcard{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);padding:13px 15px;margin-bottom:8px}
+.tbadge{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;margin-bottom:7px;text-transform:uppercase;letter-spacing:.04em}
+.tb-pre{background:var(--al);color:var(--ac)}.tb-post{background:var(--gl);color:var(--gc)}
+.tb-noon{background:var(--bl);color:var(--bc)}.tb-pm{background:var(--pl);color:var(--pc)}
+.tb-bed{background:#f0eff9;color:var(--pc)}
+.ct{font-size:16px;font-weight:600;margin-bottom:3px}
+.cs{font-size:13px;color:var(--tm);line-height:1.5}
+.srow{display:flex;align-items:flex-start;gap:10px;padding:12px 15px;border-bottom:1px solid var(--bdr)}
+.srow:last-child{border-bottom:none}
+.sinfo{flex:1}.sn{font-size:15px;font-weight:500}.sd{font-size:13px;color:var(--tm);margin-top:2px;line-height:1.4}
+.freq{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:5px;vertical-align:middle}
+.fd{background:var(--gl);color:var(--gc)}.fp{background:var(--al);color:var(--ac)}
+.fw{background:var(--pl);color:var(--pc)}.fr{background:var(--rl);color:var(--rc)}
+.drow{display:flex;align-items:center;gap:12px;padding:11px 15px;border-bottom:1px solid var(--bdr)}
+.drow:last-child{border-bottom:none}
+.dmg{font-size:17px;font-weight:700;min-width:58px}.di{font-size:14px;color:var(--tm);flex:1}
+.ostep{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--bdr)}
+.ostep:last-child{border-bottom:none}
+.onum{width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--tm);flex-shrink:0}
+.ostar{background:var(--gl);border-color:var(--gl);color:var(--gc)}
+.ot{font-size:14px;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.pill{font-size:13px;padding:5px 12px;border-radius:99px;background:var(--rl);color:var(--rc)}
+.ibox{border-radius:var(--rads);padding:11px 14px;font-size:13px;line-height:1.6;margin-bottom:8px}
+.ib-warn{background:var(--al);color:var(--ac)}.ib-info{background:var(--bl);color:var(--bc)}.ib-ok{background:var(--gl);color:var(--gc)}
+.pstep{display:flex;align-items:flex-start;gap:8px;padding:10px 15px;border-bottom:1px solid var(--bdr)}
+.pstep:last-child{border-bottom:none}
+.ptime{font-size:12px;font-weight:700;color:var(--tm);min-width:36px;padding-top:2px;flex-shrink:0}
+.ptool{font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;min-width:62px;text-align:center;flex-shrink:0}
+.pt-oven{background:var(--rl);color:var(--rc)}.pt-air{background:var(--al);color:var(--ac)}
+.pt-stove{background:var(--bl);color:var(--bc)}.pt-cast{background:var(--al);color:var(--ac)}.pt-done{background:var(--gl);color:var(--gc)}
+.pa{font-size:14px;font-weight:500}.pn{font-size:12px;color:var(--tm);margin-top:2px}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
+.sc{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rads);padding:9px 10px;text-align:center}
+.scn{font-size:12px;font-weight:500}.scl{font-size:11px;color:var(--tm);margin-top:2px}
+.day-row{display:flex;align-items:center;gap:6px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.day-row:last-child{border-bottom:none}
+.dn{font-size:14px;font-weight:700;min-width:34px}
+.dtb{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px}
+.dtb-t{background:var(--gl);color:var(--gc)}.dtb-r{background:var(--bg);color:var(--tm);border:1px solid var(--bdr)}
+.sbtns{display:flex;gap:4px;flex:1;justify-content:flex-end}
+.sbtn{font-size:13px;padding:6px 10px;border-radius:99px;border:1px solid var(--bdr);background:var(--bg);color:var(--tm);cursor:pointer;font-family:inherit;font-weight:500;line-height:1}
+.sbtn.an{background:var(--t);color:var(--wh);border-color:var(--t)}
+.sbtn.al{background:var(--bl);color:var(--bc);border-color:var(--bc)}
+.sbtn.at{background:var(--pl);color:var(--pc);border-color:var(--pc)}
+.sbtn.ad{background:#fce4ec;color:#880e4f;border-color:#f48fb1}
+.gitem{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none;-webkit-user-select:none}
+.gitem:last-child{border-bottom:none}
+.gitem:active{background:var(--bg)}
+.gitem.checked{opacity:.4}
+.gitem.checked .gnm{text-decoration:line-through}
+.gchk{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bdr);background:var(--wh);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--wh)}
+.gitem.checked .gchk{background:var(--g);border-color:var(--g)}
+.gnm{font-size:14px;font-weight:500;flex:1}
+.gqty{font-size:14px;font-weight:700;color:var(--g)}
+.gptry{font-size:12px;color:var(--tm)}
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.rst-btn{border:1px solid var(--bdr);background:var(--wh);border-radius:var(--rads);padding:7px 13px;font-size:13px;font-weight:500;color:var(--tm);cursor:pointer;font-family:inherit}
+.empty-msg{text-align:center;padding:32px 16px;font-size:14px;color:var(--tm)}
+.nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(6,1fr);background:rgba(255,255,255,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bdr);padding-bottom:env(safe-area-inset-bottom);z-index:100}
+.nb{border:none;background:transparent;padding:8px 2px 6px;font-size:10px;font-weight:500;color:var(--tm);cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px}
+.ni{font-size:20px;line-height:1}
+[data-t="food"].active{color:var(--g)}[data-t="drug"].active{color:var(--b)}
+[data-t="supps"].active{color:var(--p)}[data-t="out"].active{color:var(--a)}
+[data-t="prep"].active{color:var(--a)}[data-t="shop"].active{color:var(--g)}
+.nb.active{font-weight:700}
+</style>
+</head>
+<body>
+
+<div id="p-food" class="panel p-food active">
+<h1>What to eat</h1>
+<div class="sec" style="margin-top:0">Before gym</div>
+<div class="tcard"><span class="tbadge tb-pre">45–60 min before</span><div class="ct">Banana + casein shake</div><div class="cs">Never train fasted on Zepbound — glycogen is already lower from the deficit. Even a light snack changes the whole session.</div></div>
+<div class="sec">Post-workout / Breakfast</div>
+<div class="tcard"><span class="tbadge tb-post">After gym</span><div class="ct">3 eggs + oats &nbsp;·&nbsp; or Greek yogurt + oats</div><div class="cs">25–35g protein. Don't skip — even on rest days. One of 3–4 daily windows to trigger muscle protein synthesis.</div></div>
+<div class="sec">Lunch</div>
+<div class="tcard"><span class="tbadge tb-noon">Midday</span><div class="ct">Protein + rice or sweet potato + veg</div><div class="cs">Chicken, beef, or fish from batch. 30–40g protein. Drizzle soy + lemon — same food, tastes intentional.</div></div>
+<div class="sec">Dinner</div>
+<div class="tcard"><span class="tbadge tb-pm">Evening</span><div class="ct">Lean protein + carb + veg</div><div class="cs">Low fat. Not spicy. Salmon: air fryer 400°F, 11 min — always fresh, never batch. Stop at 70–80% full.</div></div>
+<div class="sec">Pre-bed</div>
+<div class="tcard"><span class="tbadge tb-bed">Before sleep</span><div class="ct">Cottage cheese (½ cup) or casein shake</div><div class="cs">Slow-release protein feeds muscle repair overnight. Use if daily protein target isn't hit.</div></div>
+<div class="sec">Always</div>
+<div class="rows">
+<div class="row"><div class="rt">Stop at 70–80% full</div><div class="rs">Zepbound slows digestion. Eating past this causes nausea and reflux.</div></div>
+<div class="row"><div class="rt">Protein every single meal</div><div class="rs">25–35g per meal · ~150g total per day · this is what keeps the muscle.</div></div>
+<div class="row"><div class="rt">3–4 meals a day, not 1–2</div><div class="rs">Multiple leucine triggers per day for muscle protein synthesis.</div></div>
+<div class="row"><div class="rt">Eat slowly — 20+ min per meal</div><div class="rs">Fullness signals are delayed on this drug. Chew thoroughly.</div></div>
+<div class="row"><div class="rt">16–20oz water on waking</div><div class="rs">Before coffee, before food. This is how to fix water consistency.</div></div>
+</div>
+</div>
+
+<div id="p-drug" class="panel p-drug">
+<h1>The drug</h1>
+<div class="sec" style="margin-top:0">Weekly injection</div>
+<div class="rows">
+<div class="row"><div class="rt">When</div><div class="rs">Sunday evening — inject before bed so peak nausea hits during sleep</div></div>
+<div class="row"><div class="rt">Sites — rotate every week</div><div class="rs">Abdomen (2+ in from navel) · outer thigh · upper arm</div></div>
+<div class="row"><div class="rt">Prep</div><div class="rs">Remove from fridge 30 min before. Room temp OK up to 21 days (&lt;86°F).</div></div>
+</div>
+<div class="sec">Dose schedule — restart from bottom</div>
+<div class="rows">
+<div class="drow"><span class="dmg" style="color:var(--g)">2.5 mg</span><span class="di">Weeks 1–4 · restart here no matter what</span></div>
+<div class="drow"><span class="dmg" style="color:var(--g)">5 mg</span><span class="di">Weeks 5–8</span></div>
+<div class="drow"><span class="dmg" style="color:var(--b)">7.5 mg</span><span class="di">Weeks 9–12 · only if tolerating well</span></div>
+<div class="drow"><span class="dmg" style="color:var(--p)">10–15 mg</span><span class="di">Only increase if GI is consistently fine</span></div>
+</div>
+<div class="ibox ib-info">If GI is bad after a dose increase — stay at your current dose for 6–8 weeks instead of 4. No prize for reaching 15mg faster.</div>
+<div class="sec">Triggers — always avoid</div>
+<div class="pills">
+<span class="pill">Fried / greasy</span><span class="pill">Alcohol</span><span class="pill">Spicy food</span>
+<span class="pill">Carbonated drinks</span><span class="pill">Large portions</span><span class="pill">Eating too fast</span><span class="pill">High-sugar food</span>
+</div>
+<div class="sec">When GI symptoms hit</div>
+<div class="rows">
+<div class="row"><div class="rt">Nausea</div><div class="rs">Zofran (Rx, as needed only). Ginger tea or chews. Small meals. Stay upright 30 min after eating.</div></div>
+<div class="row"><div class="rt">Constipation</div><div class="rs">MiraLax (OTC, as needed). 3L water minimum. Short walk after meals.</div></div>
+<div class="row"><div class="rt">Bloating / diarrhea</div><div class="rs">Eat simple: banana, rice, eggs. Skip cruciferous veg temporarily.</div></div>
+<div class="row"><div class="rt">General rule</div><div class="rs">Overeating on Zepbound punishes itself. The discomfort is the feedback.</div></div>
+</div>
+</div>
+
+<div id="p-supps" class="panel p-supps">
+<h1>Supplements</h1>
+<div class="sec" style="margin-top:0">Every day — including rest days</div>
+<div class="rows">
+<div class="srow"><div class="sinfo"><div class="sn">Creatine monohydrate <span class="freq fd">daily</span></div><div class="sd">5g · any time · saturation over time is what makes it work</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">Magnesium glycinate <span class="freq fd">daily</span></div><div class="sd">300mg · before bed only — sleep, recovery, constipation</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">Casein protein <span class="freq fd">daily</span></div><div class="sd">Throughout day + pre-bed · your existing casein is fine</div></div></div>
+</div>
+<div class="sec">Around workouts</div>
+<div class="rows">
+<div class="srow"><div class="sinfo"><div class="sn">Electrolytes</div><div class="sd">Pre or intra-workout · LMNT or Liquid IV · low/no sugar</div></div></div>
+</div>
+<div class="sec">As needed only — not daily</div>
+<div class="rows">
+<div class="srow"><div class="sinfo"><div class="sn">Zofran (ondansetron) <span class="freq fr">Rx</span> <span class="freq fp">as needed</span></div><div class="sd">Only when nauseated. Keep on hand for dose increases.</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">MiraLax <span class="freq fp">as needed</span></div><div class="sd">Only when constipated. Tasteless, dissolves in any drink.</div></div></div>
+</div>
+<div class="sec">Weekly</div>
+<div class="rows">
+<div class="srow"><div class="sinfo"><div class="sn">Zepbound injection <span class="freq fw">weekly</span> <span class="freq fr">Rx</span></div><div class="sd">Sunday evening · rotate sites · see Drug tab</div></div></div>
+</div>
+<div class="ibox ib-ok">Zofran and MiraLax are rescue meds only. Taking Zofran daily can worsen constipation.</div>
+</div>
+
+<div id="p-out" class="panel p-out">
+<h1>Eating out</h1>
+<div class="sec" style="margin-top:0">The order — any restaurant</div>
+<div class="rows">
+<div class="ostep"><div class="onum">1</div><div class="ot">Grilled protein — chicken, fish, or lean beef</div></div>
+<div class="ostep"><div class="onum">2</div><div class="ot">Simple carb — white rice or plain potato (never fries)</div></div>
+<div class="ostep"><div class="onum">3</div><div class="ot">Vegetable — steamed or roasted, not creamy</div></div>
+<div class="ostep"><div class="onum ostar">★</div><div class="ot">Sauce on the side. Stop at 70% full. Box the rest.</div></div>
+</div>
+<div class="sec">Good spots</div>
+<div class="rows">
+<div class="row"><div class="rt">Chipotle</div><div class="rs">Bowl · chicken or steak · rice · black beans · salsa · lettuce</div><div class="rskip">Skip: cheese, sour cream, queso, chips</div></div>
+<div class="row"><div class="rt">Sweetgreen</div><div class="rs">Warm bowl · chicken · grain · vinaigrette dressing</div><div class="rskip">Skip: creamy dressings, croutons</div></div>
+<div class="row"><div class="rt">Mediterranean / halal</div><div class="rs">Chicken over rice · tomato-based sauce</div><div class="rskip">Skip: white garlic sauce — high fat</div></div>
+<div class="row"><div class="rt">Japanese</div><div class="rs">Sashimi · edamame · miso soup · rice bowl</div><div class="rskip">Skip: tempura, mayo rolls</div></div>
+<div class="row"><div class="rt">Thai</div><div class="rs">Stir-fried protein · jasmine rice · tom yum</div><div class="rskip">Skip: coconut curries, fried rice</div></div>
+</div>
+<div class="sec">Work dinners</div>
+<div class="rows">
+<div class="row"><div class="rt">Order first</div><div class="rs">Before anyone else — avoids the social gravity of the table ordering fried apps.</div></div>
+<div class="row"><div class="rt">Alcohol: 1 drink max</div><div class="rs">Zepbound makes alcohol absorb faster. 1 drink hits like 1.5. Wine or light beer with food only.</div></div>
+<div class="row"><div class="rt">Social cover</div><div class="rs">"Not that hungry tonight" — no one questions it.</div></div>
+</div>
+<div class="sec">Travel</div>
+<div class="rows">
+<div class="row"><div class="rt">Pack</div><div class="rs">RXBAR/Quest bars · creatine packs · electrolyte sticks · casein sachets</div></div>
+<div class="row"><div class="rt">Zepbound</div><div class="rs">Carry-on OK · room temp 21 days · no ice needed</div></div>
+<div class="row"><div class="rt">Hotel day 1</div><div class="rs">Find nearest grocery store. Greek yogurt + bananas + eggs in mini fridge.</div></div>
+<div class="row"><div class="rt">Hotel breakfast</div><div class="rs">Eggs + oatmeal + fruit only. Skip everything else.</div></div>
+</div>
+</div>
+
+<div id="p-prep" class="panel p-prep">
+<h1>Sunday prep</h1>
+<div class="ibox ib-ok" style="margin-top:0">~65 min total · ~20 min hands-on · start oven and air fryer first, then stovetop while they run</div>
+<div class="sec" style="margin-top:12px">Step by step</div>
+<div class="rows">
+<div class="pstep"><span class="ptime">0:00</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Preheat to 400°F</div><div class="pn">Needs 10 min to reach temp — start here.</div></div></div>
+<div class="pstep"><span class="ptime">0:10</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Sweet potatoes in — 50 min</div><div class="pn">Whole, unpeeled. Score skin with a fork first.</div></div></div>
+<div class="pstep"><span class="ptime">0:10</span><span class="ptool pt-air">Air fryer</span><div><div class="pa">Chicken — 380°F, 22 min</div><div class="pn">Pat dry. Salt, pepper, garlic powder. Flip at 11 min.</div></div></div>
+<div class="pstep"><span class="ptime">0:12</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Rice — 2 cups rice, 3.5 cups water</div><div class="pn">Boil then simmer covered 18 min. Don't lift lid.</div></div></div>
+<div class="pstep"><span class="ptime">0:20</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Hard-boil 6 eggs — 10 min</div><div class="pn">Into boiling water. 10 min, then ice bath.</div></div></div>
+<div class="pstep"><span class="ptime">0:30</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Rice + eggs done — cool and set aside</div><div class="pn">Fluff rice uncovered. Eggs into ice bath 5 min.</div></div></div>
+<div class="pstep"><span class="ptime">0:32</span><span class="ptool pt-air">Air fryer</span><div><div class="pa">Chicken done — rest 5 min, store whole</div><div class="pn">Don't slice until cooled. Keeps moisture in.</div></div></div>
+<div class="pstep"><span class="ptime">0:33</span><span class="ptool pt-cast">Cast iron</span><div><div class="pa">Ground beef (1 lb) — medium-high, 10 min</div><div class="pn">Break up as it cooks. Cumin + garlic powder + salt. Drain fat.</div></div></div>
+<div class="pstep"><span class="ptime">0:35</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Sheet pan: carrots + zucchini — 25 min</div><div class="pn">Toss in olive oil + salt. Single layer.</div></div></div>
+<div class="pstep"><span class="ptime">1:00</span><span class="ptool pt-done">Done</span><div><div class="pa">Everything out — cool and container</div><div class="pn">Cool to room temp before lidding. Salmon always fresh, never batch.</div></div></div>
+</div>
+<div class="sec">Storage life — fridge</div>
+<div class="sg">
+<div class="sc"><div class="scn">Chicken</div><div class="scl">4 days</div></div>
+<div class="sc"><div class="scn">Ground beef</div><div class="scl">4 days</div></div>
+<div class="sc"><div class="scn">Rice</div><div class="scl">5 days</div></div>
+<div class="sc"><div class="scn">Hard-boiled eggs</div><div class="scl">7 days</div></div>
+<div class="sc"><div class="scn">Roasted veg</div><div class="scl">4 days</div></div>
+<div class="sc"><div class="scn">Sweet potatoes</div><div class="scl">5 days</div></div>
+</div>
+<div class="ibox ib-warn">Salmon: never batch cook. Air fryer 400°F, 11 min fresh on Tue and Thu nights. Reheated salmon is a completely different (worse) food.</div>
+</div>
+
+<div id="p-shop" class="panel p-shop">
+<h1>Grocery list</h1>
+<div class="ibox ib-info" style="margin-top:0">Mark your week. The list adjusts for days you eat out, travel, or have a date night.</div>
+<div class="sec" style="margin-top:12px">Legend &nbsp;·&nbsp; <span style="font-weight:400;text-transform:none;letter-spacing:0">— Normal &nbsp; 🍽 Lunch out &nbsp; ✈️ Travel &nbsp; ♥ Date night</span></div>
+<div class="rows" id="day-selector"></div>
+<div class="top-row" style="margin-top:20px">
+  <span class="sec" style="margin:0">Shopping list</span>
+  <button class="rst-btn" onclick="resetAll()">Reset week</button>
+</div>
+<div id="grocery-list"></div>
+</div>
+
+<nav class="nav">
+<button class="nb active" data-t="food" onclick="sw('food')"><span class="ni">🥗</span>Food</button>
+<button class="nb" data-t="drug" onclick="sw('drug')"><span class="ni">💊</span>Drug</button>
+<button class="nb" data-t="supps" onclick="sw('supps')"><span class="ni">⚡</span>Supps</button>
+<button class="nb" data-t="out" onclick="sw('out')"><span class="ni">📍</span>Out</button>
+<button class="nb" data-t="prep" onclick="sw('prep')"><span class="ni">🥘</span>Prep</button>
+<button class="nb" data-t="shop" onclick="sw('shop')"><span class="ni">🛒</span>Shop</button>
+</nav>
+
+<script>
+function sw(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  document.querySelector('[data-t="'+id+'"]').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TRAIN={Mon:true,Tue:true,Wed:false,Thu:true,Fri:false,Sat:true,Sun:false};
+const BASE={chicken:1.75,salmon:2,beef:1.0,eggs:14,yogurt:5,banana:7,cottage:2,turkey:0.5,sweet_potato:4,avocado:3,spinach:1,zucchini:2,carrots:1,lemon:4};
+const DEDUCT={
+  Mon:{lunchOut:{chicken:0.4},travel:{chicken:0.4,beef:0.35,eggs:3,banana:1,cottage:0.5,spinach:0.3,carrots:0.4},dateNight:{beef:0.35}},
+  Tue:{lunchOut:{chicken:0.4},travel:{chicken:0.4,salmon:1,banana:1,yogurt:1,zucchini:1,spinach:0.3,lemon:1},dateNight:{salmon:1,zucchini:1,lemon:1}},
+  Wed:{lunchOut:{chicken:0.4},travel:{chicken:0.4,beef:0.35,banana:1,yogurt:1,avocado:0.5,sweet_potato:0.5,spinach:0.3,cottage:0.5},dateNight:{beef:0.35,sweet_potato:0.5}},
+  Thu:{lunchOut:{beef:0.25},travel:{beef:0.25,salmon:1,banana:1,eggs:3,sweet_potato:0.5,zucchini:1,avocado:0.5,lemon:1},dateNight:{salmon:1,sweet_potato:0.5,zucchini:1,lemon:1}},
+  Fri:{lunchOut:{turkey:0.15,avocado:0.5,eggs:1},travel:{turkey:0.15,yogurt:1,banana:1,eggs:4,avocado:0.5,spinach:0.3,cottage:0.5},dateNight:{eggs:3}},
+  Sat:{lunchOut:{turkey:0.15,avocado:0.5},travel:{turkey:0.15,banana:1,yogurt:1,eggs:1,avocado:0.5},dateNight:{}},
+  Sun:{lunchOut:{eggs:2},travel:{yogurt:1,banana:1,eggs:3,turkey:0.15,avocado:0.5,cottage:0.5},dateNight:{turkey:0.15}}
+};
+function fl(q){const r=Math.round(q*4)/4;const m={0.25:'1/4 lb',0.5:'1/2 lb',0.75:'3/4 lb',1:'1 lb',1.25:'1 1/4 lbs',1.5:'1 1/2 lbs',1.75:'1 3/4 lbs',2:'2 lbs',2.25:'2 1/4 lbs',2.5:'2 1/2 lbs'};return m[r]||(r+' lbs');}
+const ITEMS=[
+  {k:'chicken',l:'Chicken thighs or breast',c:'p',f:q=>q<0.4?null:fl(q)},
+  {k:'salmon',l:'Salmon (6oz each)',c:'p',f:q=>q<1?null:q+(q===1?' portion':' portions')},
+  {k:'beef',l:'Ground beef 90/10',c:'p',f:q=>q<0.25?null:fl(q)},
+  {k:'eggs',l:'Eggs',c:'p',f:q=>q<2?null:(Math.ceil(q/6)*6)+' ct'},
+  {k:'yogurt',l:'Greek yogurt (plain)',c:'p',f:q=>q<1?null:Math.ceil(q)+' containers'},
+  {k:'cottage',l:'Cottage cheese',c:'p',f:q=>q<0.5?null:Math.ceil(q)+' containers'},
+  {k:'turkey',l:'Deli turkey',c:'p',f:q=>q<0.1?null:fl(q)},
+  {k:'banana',l:'Bananas',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+  {k:'sweet_potato',l:'Sweet potatoes',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+  {k:'avocado',l:'Avocados',c:'v',f:q=>q<0.5?null:Math.ceil(q)+' count'},
+  {k:'spinach',l:'Baby spinach (5oz bag)',c:'v',f:q=>q<0.4?null:'1 bag'},
+  {k:'zucchini',l:'Zucchini',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+  {k:'carrots',l:'Carrots',c:'v',f:q=>q<0.4?null:'1 bag'},
+  {k:'lemon',l:'Lemons',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+];
+const PANTRY=['Rolled oats','White rice','Rice cakes','Olive oil','Low-sodium soy sauce','Canned chickpeas (x2)'];
+let dayStatus={};let checked={};
+DAYS.forEach(d=>dayStatus[d]='normal');
+try{const ds=localStorage.getItem('zep_ds');const ck=localStorage.getItem('zep_ck');if(ds)dayStatus=JSON.parse(ds);if(ck)checked=JSON.parse(ck);}catch(e){}
+function save(){try{localStorage.setItem('zep_ds',JSON.stringify(dayStatus));localStorage.setItem('zep_ck',JSON.stringify(checked));}catch(e){}}
+function calcTotals(){const t={...BASE};for(const d of DAYS){const s=dayStatus[d];if(s==='normal')continue;const ded=DEDUCT[d][s]||{};for(const[k,v]of Object.entries(ded))t[k]=Math.max(0,(t[k]||0)-v);}return t;}
+function renderDays(){document.getElementById('day-selector').innerHTML=DAYS.map(d=>{const s=dayStatus[d];const tr=TRAIN[d];return`<div class="day-row"><span class="dn">${d}</span><span class="dtb ${tr?'dtb-t':'dtb-r'}">${tr?'T':'R'}</span><div class="sbtns"><button class="sbtn ${s==='normal'?'an':''}" onclick="setDay('${d}','normal')">—</button><button class="sbtn ${s==='lunchOut'?'al':''}" onclick="setDay('${d}','lunchOut')">🍽</button><button class="sbtn ${s==='travel'?'at':''}" onclick="setDay('${d}','travel')">✈️</button><button class="sbtn ${s==='dateNight'?'ad':''}" onclick="setDay('${d}','dateNight')">♥</button></div></div>`;}).join('');}
+function gRow(item,qty){const fq=item.f(qty);if(!fq)return null;const chk=!!checked[item.k];return`<div class="gitem ${chk?'checked':''}" onclick="tog('${item.k}')"><div class="gchk">${chk?'✓':''}</div><div class="gnm">${item.l}</div><div class="gqty">${fq}</div></div>`;}
+function renderGrocery(){const t=calcTotals();const el=document.getElementById('grocery-list');let html='';const pH=ITEMS.filter(i=>i.c==='p').map(i=>gRow(i,t[i.k])).filter(Boolean).join('');if(pH)html+=`<div class="sec">Proteins</div><div class="rows">${pH}</div>`;const vH=ITEMS.filter(i=>i.c==='v').map(i=>gRow(i,t[i.k])).filter(Boolean).join('');if(vH)html+=`<div class="sec">Produce</div><div class="rows">${vH}</div>`;const ptH=PANTRY.map(name=>{const k='pt_'+name.replace(/\W+/g,'');const chk=!!checked[k];return`<div class="gitem ${chk?'checked':''}" onclick="tog('${k}')"><div class="gchk">${chk?'✓':''}</div><div class="gnm">${name}</div><div class="gptry">top up</div></div>`;}).join('');html+=`<div class="sec">Pantry — top up if low</div><div class="rows">${ptH}</div>`;if(!pH&&!vH)html='<div class="empty-msg">No perishables needed — all days are away.</div>'+html;el.innerHTML=html;}
+function setDay(day,status){dayStatus[day]=status;checked={};save();renderDays();renderGrocery();}
+function tog(key){checked[key]=!checked[key];save();renderGrocery();}
+function resetAll(){DAYS.forEach(d=>dayStatus[d]='normal');checked={};save();renderDays();renderGrocery();}
+renderDays();
+renderGrocery();
+
+// Register service worker for offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>

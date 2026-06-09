@@ -1,0 +1,19 @@
+{
+  "name": "Oliver Health",
+  "short_name": "Oliver",
+  "description": "Personal health protocol — food timing, drug management, supplements, and grocery planning",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f5f5",
+  "theme_color": "#0D6E52",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
