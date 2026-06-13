@@ -27,22 +27,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .panel.active{display:block}
 @keyframes fi{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
 h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
-.p-food h1{color:var(--g)}.p-drug h1{color:var(--b)}.p-supps h1{color:var(--p)}
-.p-out h1{color:var(--a)}.p-prep h1{color:var(--a)}.p-shop h1{color:var(--g)}
+.p-food h1{color:var(--g)}.p-recipes h1{color:var(--p)}.p-plan h1{color:var(--b)}
+.p-shop h1{color:var(--g)}.p-health h1{color:var(--b)}.p-guide h1{color:var(--a)}
 .sec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tm);margin:20px 0 8px}
 .rows{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);overflow:hidden;margin-bottom:8px}
 .row{padding:12px 15px;border-bottom:1px solid var(--bdr)}
 .row:last-child{border-bottom:none}
-.rt{font-size:15px;font-weight:500}
-.rs{font-size:13px;color:var(--tm);margin-top:2px;line-height:1.5}
+.rt{font-size:15px;font-weight:500}.rs{font-size:13px;color:var(--tm);margin-top:2px;line-height:1.5}
 .rskip{font-size:13px;color:var(--rc);margin-top:3px}
 .tcard{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);padding:13px 15px;margin-bottom:8px}
 .tbadge{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;margin-bottom:7px;text-transform:uppercase;letter-spacing:.04em}
 .tb-pre{background:var(--al);color:var(--ac)}.tb-post{background:var(--gl);color:var(--gc)}
 .tb-noon{background:var(--bl);color:var(--bc)}.tb-pm{background:var(--pl);color:var(--pc)}
 .tb-bed{background:#f0eff9;color:var(--pc)}
-.ct{font-size:16px;font-weight:600;margin-bottom:3px}
-.cs{font-size:13px;color:var(--tm);line-height:1.5}
+.ct{font-size:16px;font-weight:600;margin-bottom:3px}.cs{font-size:13px;color:var(--tm);line-height:1.5}
 .srow{display:flex;align-items:flex-start;gap:10px;padding:12px 15px;border-bottom:1px solid var(--bdr)}
 .srow:last-child{border-bottom:none}
 .sinfo{flex:1}.sn{font-size:15px;font-weight:500}.sd{font-size:13px;color:var(--tm);margin-top:2px;line-height:1.4}
@@ -55,8 +53,7 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
 .ostep{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--bdr)}
 .ostep:last-child{border-bottom:none}
 .onum{width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--tm);flex-shrink:0}
-.ostar{background:var(--gl);border-color:var(--gl);color:var(--gc)}
-.ot{font-size:14px;line-height:1.4}
+.ostar{background:var(--gl);border-color:var(--gl);color:var(--gc)}.ot{font-size:14px;line-height:1.4}
 .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
 .pill{font-size:13px;padding:5px 12px;border-radius:99px;background:var(--rl);color:var(--rc)}
 .ibox{border-radius:var(--rads);padding:11px 14px;font-size:13px;line-height:1.6;margin-bottom:8px}
@@ -71,13 +68,66 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
 .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
 .sc{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rads);padding:9px 10px;text-align:center}
 .scn{font-size:12px;font-weight:500}.scl{font-size:11px;color:var(--tm);margin-top:2px}
+/* RECIPE BROWSER */
+.cat-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;-ms-overflow-style:none;scrollbar-width:none}
+.cat-bar::-webkit-scrollbar{display:none}
+.cpill{font-size:13px;padding:6px 14px;border-radius:99px;border:1px solid var(--bdr);background:var(--bg);color:var(--tm);cursor:pointer;white-space:nowrap;font-family:inherit;font-weight:500;flex-shrink:0}
+.cpill.active{background:var(--t);color:var(--wh);border-color:var(--t)}
+.rcard{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);margin-bottom:8px;overflow:hidden}
+.rcard-top{padding:12px 15px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.rcard-head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.rcard-name{font-size:15px;font-weight:600;flex:1;color:var(--t)}
+.rcard-pro{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--gl);color:var(--gc);flex-shrink:0}
+.rcard-meta{font-size:12px;color:var(--tm);display:flex;align-items:center;gap:8px}
+.rbadge{font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px}
+.rb-batch{background:var(--gl);color:var(--gc)}.rb-fresh{background:var(--al);color:var(--ac)}
+.rcard-desc{font-size:13px;color:var(--tm);margin-top:4px}
+.rcard-body{padding:0 15px 14px;border-top:1px solid var(--bdr)}
+.rcard-body.hide{display:none}
+.rcard-sec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tm);margin:12px 0 6px}
+.rcard-ing{font-size:13px;color:var(--t);padding:5px 0;border-bottom:1px solid var(--bdr)}
+.rcard-ing:last-child{border-bottom:none}
+.rcard-step{display:flex;gap:10px;padding:5px 0}
+.rs-n{font-size:12px;font-weight:700;color:var(--tm);min-width:16px;padding-top:1px;flex-shrink:0}
+.rs-t{font-size:13px;color:var(--t);line-height:1.5}
+.rcard-sauce{background:var(--al);border-radius:var(--rads);padding:9px 12px;margin-top:10px;font-size:13px;color:var(--ac)}
+/* PLANNER */
+.pday-bar{display:flex;gap:5px;margin-bottom:14px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+.pday-bar::-webkit-scrollbar{display:none}
+.pdb{flex-shrink:0;width:46px;padding:7px 0;border-radius:var(--rad);border:1px solid var(--bdr);background:var(--bg);cursor:pointer;font-family:inherit;text-align:center;position:relative}
+.pdb .pd-n{font-size:13px;font-weight:600;color:var(--tm);display:block}
+.pdb .pd-t{font-size:10px;color:var(--tm);display:block}
+.pdb.active{background:var(--wh);border-color:var(--t)}
+.pdb.active .pd-n{color:var(--t)}
+.pdb::after{content:'';display:block;width:6px;height:6px;border-radius:50%;background:transparent;margin:3px auto 0}
+.pdb.full::after{background:var(--g)}.pdb.partial::after{background:var(--a)}
+.plan-stat{display:flex;gap:8px;margin-bottom:16px}
+.ps-card{flex:1;background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rads);padding:10px 12px;text-align:center}
+.ps-num{font-size:20px;font-weight:700;color:var(--g)}.ps-lbl{font-size:11px;color:var(--tm);margin-top:2px}
+.plan-slot{background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);margin-bottom:8px;overflow:hidden}
+.slot-head{display:flex;align-items:center;gap:10px;padding:12px 15px}
+.slot-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tm);min-width:68px}
+.slot-add{font-size:13px;font-weight:500;color:var(--b);cursor:pointer;border:none;background:none;font-family:inherit;padding:0;flex:1;text-align:left}
+.slot-recipe{flex:1;display:flex;align-items:center;gap:8px}
+.slot-rname{font-size:14px;font-weight:500;flex:1}
+.slot-rpro{font-size:12px;font-weight:700;color:var(--gc)}
+.slot-rm{font-size:20px;line-height:1;color:var(--tm);cursor:pointer;border:none;background:none;padding:0;flex-shrink:0}
+.picker{border-top:1px solid var(--bdr);background:var(--bg);max-height:270px;overflow-y:auto}
+.pk-item{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--bdr);cursor:pointer;background:var(--wh);-webkit-user-select:none;user-select:none}
+.pk-item:last-child{border-bottom:none}
+.pk-item:active{background:var(--bg)}
+.pk-name{font-size:14px;font-weight:500;flex:1}
+.pk-pro{font-size:12px;font-weight:700;color:var(--gc)}
+.pk-time{font-size:12px;color:var(--tm)}
+.pk-cancel{padding:12px 15px;font-size:13px;font-weight:600;color:var(--tm);text-align:center;cursor:pointer;border-top:2px solid var(--bdr);background:var(--bg)}
+/* SHOP */
 .day-row{display:flex;align-items:center;gap:6px;padding:10px 0;border-bottom:1px solid var(--bdr)}
 .day-row:last-child{border-bottom:none}
 .dn{font-size:14px;font-weight:700;min-width:34px}
 .dtb{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px}
 .dtb-t{background:var(--gl);color:var(--gc)}.dtb-r{background:var(--bg);color:var(--tm);border:1px solid var(--bdr)}
 .sbtns{display:flex;gap:4px;flex:1;justify-content:flex-end}
-.sbtn{font-size:13px;padding:6px 10px;border-radius:99px;border:1px solid var(--bdr);background:var(--bg);color:var(--tm);cursor:pointer;font-family:inherit;font-weight:500;line-height:1}
+.sbtn{font-size:13px;padding:5px 9px;border-radius:99px;border:1px solid var(--bdr);background:var(--bg);color:var(--tm);cursor:pointer;font-family:inherit;font-weight:500;line-height:1}
 .sbtn.an{background:var(--t);color:var(--wh);border-color:var(--t)}
 .sbtn.al{background:var(--bl);color:var(--bc);border-color:var(--bc)}
 .sbtn.at{background:var(--pl);color:var(--pc);border-color:var(--pc)}
@@ -85,105 +135,123 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
 .gitem{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none;-webkit-user-select:none}
 .gitem:last-child{border-bottom:none}
 .gitem:active{background:var(--bg)}
-.gitem.checked{opacity:.4}
-.gitem.checked .gnm{text-decoration:line-through}
+.gitem.chk{opacity:.4}.gitem.chk .gnm{text-decoration:line-through}
 .gchk{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bdr);background:var(--wh);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--wh)}
-.gitem.checked .gchk{background:var(--g);border-color:var(--g)}
-.gnm{font-size:14px;font-weight:500;flex:1}
-.gqty{font-size:14px;font-weight:700;color:var(--g)}
+.gitem.chk .gchk{background:var(--g);border-color:var(--g)}
+.gnm{font-size:14px;font-weight:500;flex:1}.gqty{font-size:14px;font-weight:700;color:var(--g)}
 .gptry{font-size:12px;color:var(--tm)}
 .top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .rst-btn{border:1px solid var(--bdr);background:var(--wh);border-radius:var(--rads);padding:7px 13px;font-size:13px;font-weight:500;color:var(--tm);cursor:pointer;font-family:inherit}
-.empty-msg{text-align:center;padding:32px 16px;font-size:14px;color:var(--tm)}
+.shop-empty{text-align:center;padding:28px 16px;background:var(--wh);border:1px solid var(--bdr);border-radius:var(--rad);margin-bottom:8px}
+.se-t{font-size:15px;font-weight:600;margin-bottom:6px}.se-s{font-size:13px;color:var(--tm)}
+/* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(6,1fr);background:rgba(255,255,255,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bdr);padding-bottom:env(safe-area-inset-bottom);z-index:100}
 .nb{border:none;background:transparent;padding:8px 2px 6px;font-size:10px;font-weight:500;color:var(--tm);cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px}
 .ni{font-size:20px;line-height:1}
-[data-t="food"].active{color:var(--g)}[data-t="drug"].active{color:var(--b)}
-[data-t="supps"].active{color:var(--p)}[data-t="out"].active{color:var(--a)}
-[data-t="prep"].active{color:var(--a)}[data-t="shop"].active{color:var(--g)}
+[data-t="food"].active{color:var(--g)}[data-t="recipes"].active{color:var(--p)}
+[data-t="plan"].active{color:var(--b)}[data-t="shop"].active{color:var(--g)}
+[data-t="health"].active{color:var(--b)}[data-t="guide"].active{color:var(--a)}
 .nb.active{font-weight:700}
 </style>
 </head>
 <body>
 
+<!-- ═══ FOOD ═══ -->
 <div id="p-food" class="panel p-food active">
 <h1>What to eat</h1>
 <div class="sec" style="margin-top:0">Before gym</div>
-<div class="tcard"><span class="tbadge tb-pre">45–60 min before</span><div class="ct">Banana + casein shake</div><div class="cs">Never train fasted on Zepbound — glycogen is already lower from the deficit. Even a light snack changes the whole session.</div></div>
+<div class="tcard"><span class="tbadge tb-pre">45–60 min before</span><div class="ct">Banana + casein shake</div><div class="cs">Never train fasted on Zepbound — glycogen is already lower from the deficit.</div></div>
 <div class="sec">Post-workout / Breakfast</div>
-<div class="tcard"><span class="tbadge tb-post">After gym</span><div class="ct">3 eggs + oats &nbsp;·&nbsp; or Greek yogurt + oats</div><div class="cs">25–35g protein. Don't skip — even on rest days. One of 3–4 daily windows to trigger muscle protein synthesis.</div></div>
+<div class="tcard"><span class="tbadge tb-post">After gym</span><div class="ct">3 eggs + oats &nbsp;·&nbsp; or Greek yogurt + oats</div><div class="cs">25–35g protein. Don't skip on rest days — one of 3–4 daily windows for muscle protein synthesis.</div></div>
 <div class="sec">Lunch</div>
-<div class="tcard"><span class="tbadge tb-noon">Midday</span><div class="ct">Protein + rice or sweet potato + veg</div><div class="cs">Chicken, beef, or fish from batch. 30–40g protein. Drizzle soy + lemon — same food, tastes intentional.</div></div>
+<div class="tcard"><span class="tbadge tb-noon">Midday</span><div class="ct">Protein + rice or sweet potato + veg</div><div class="cs">30–40g protein. Drizzle soy + lemon — same food, tastes intentional. See Recipes tab.</div></div>
 <div class="sec">Dinner</div>
-<div class="tcard"><span class="tbadge tb-pm">Evening</span><div class="ct">Lean protein + carb + veg</div><div class="cs">Low fat. Not spicy. Salmon: air fryer 400°F, 11 min — always fresh, never batch. Stop at 70–80% full.</div></div>
+<div class="tcard"><span class="tbadge tb-pm">Evening</span><div class="ct">Lean protein + carb + veg</div><div class="cs">Low fat. Not spicy. Salmon: air fryer 400°F 11 min — always fresh, never batch. Stop at 70–80% full.</div></div>
 <div class="sec">Pre-bed</div>
-<div class="tcard"><span class="tbadge tb-bed">Before sleep</span><div class="ct">Cottage cheese (½ cup) or casein shake</div><div class="cs">Slow-release protein feeds muscle repair overnight. Use if daily protein target isn't hit.</div></div>
-<div class="sec">Always</div>
+<div class="tcard"><span class="tbadge tb-bed">Before sleep</span><div class="ct">Cottage cheese (½ cup) or casein shake</div><div class="cs">Slow-release protein feeds muscle repair overnight.</div></div>
+<div class="sec">Rules</div>
 <div class="rows">
 <div class="row"><div class="rt">Stop at 70–80% full</div><div class="rs">Zepbound slows digestion. Eating past this causes nausea and reflux.</div></div>
-<div class="row"><div class="rt">Protein every single meal</div><div class="rs">25–35g per meal · ~150g total per day · this is what keeps the muscle.</div></div>
+<div class="row"><div class="rt">Protein every meal</div><div class="rs">25–35g per meal · ~150g total per day · this is what keeps the muscle.</div></div>
 <div class="row"><div class="rt">3–4 meals a day, not 1–2</div><div class="rs">Multiple leucine triggers per day for muscle protein synthesis.</div></div>
-<div class="row"><div class="rt">Eat slowly — 20+ min per meal</div><div class="rs">Fullness signals are delayed on this drug. Chew thoroughly.</div></div>
-<div class="row"><div class="rt">16–20oz water on waking</div><div class="rs">Before coffee, before food. This is how to fix water consistency.</div></div>
+<div class="row"><div class="rt">Eat slowly — 20+ min</div><div class="rs">Fullness signals are delayed. Chew thoroughly.</div></div>
+<div class="row"><div class="rt">16–20oz water on waking</div><div class="rs">Before coffee, before food. Fixes water consistency.</div></div>
 </div>
 </div>
 
-<div id="p-drug" class="panel p-drug">
-<h1>The drug</h1>
+<!-- ═══ RECIPES ═══ -->
+<div id="p-recipes" class="panel p-recipes">
+<h1>Recipes</h1>
+<div class="cat-bar" id="cat-bar"></div>
+<div id="recipe-list"></div>
+</div>
+
+<!-- ═══ PLAN ═══ -->
+<div id="p-plan" class="panel p-plan">
+<h1>Meal planner</h1>
+<div class="plan-stat" id="plan-stat"></div>
+<div class="pday-bar" id="pday-bar"></div>
+<div id="plan-slots"></div>
+</div>
+
+<!-- ═══ SHOP ═══ -->
+<div id="p-shop" class="panel p-shop">
+<h1>Grocery list</h1>
+<div class="ibox ib-info" style="margin-top:0">Plan your week first — the list generates from your planned meals. Mark days you eat out or travel below.</div>
+<div class="sec" style="margin-top:12px">Day overrides &nbsp;·&nbsp; <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">— Normal &nbsp; 🍽 Lunch out &nbsp; ✈️ Travel &nbsp; ♥ Date</span></div>
+<div class="rows" id="day-selector"></div>
+<div class="top-row" style="margin-top:20px">
+  <span class="sec" style="margin:0">Shopping list</span>
+  <button class="rst-btn" onclick="resetShop()">Reset checks</button>
+</div>
+<div id="grocery-list"></div>
+</div>
+
+<!-- ═══ HEALTH (Drug + Supps) ═══ -->
+<div id="p-health" class="panel p-health">
+<h1>Health protocol</h1>
 <div class="sec" style="margin-top:0">Weekly injection</div>
 <div class="rows">
 <div class="row"><div class="rt">When</div><div class="rs">Sunday evening — inject before bed so peak nausea hits during sleep</div></div>
-<div class="row"><div class="rt">Sites — rotate every week</div><div class="rs">Abdomen (2+ in from navel) · outer thigh · upper arm</div></div>
+<div class="row"><div class="rt">Sites — rotate weekly</div><div class="rs">Abdomen (2+ in from navel) · outer thigh · upper arm</div></div>
 <div class="row"><div class="rt">Prep</div><div class="rs">Remove from fridge 30 min before. Room temp OK up to 21 days (&lt;86°F).</div></div>
 </div>
-<div class="sec">Dose schedule — restart from bottom</div>
+<div class="sec">Dose schedule — restart from 2.5mg</div>
 <div class="rows">
-<div class="drow"><span class="dmg" style="color:var(--g)">2.5 mg</span><span class="di">Weeks 1–4 · restart here no matter what</span></div>
+<div class="drow"><span class="dmg" style="color:var(--g)">2.5 mg</span><span class="di">Weeks 1–4 · restart here</span></div>
 <div class="drow"><span class="dmg" style="color:var(--g)">5 mg</span><span class="di">Weeks 5–8</span></div>
 <div class="drow"><span class="dmg" style="color:var(--b)">7.5 mg</span><span class="di">Weeks 9–12 · only if tolerating well</span></div>
 <div class="drow"><span class="dmg" style="color:var(--p)">10–15 mg</span><span class="di">Only increase if GI is consistently fine</span></div>
 </div>
-<div class="ibox ib-info">If GI is bad after a dose increase — stay at your current dose for 6–8 weeks instead of 4. No prize for reaching 15mg faster.</div>
-<div class="sec">Triggers — always avoid</div>
+<div class="ibox ib-info">GI acting up after a dose increase? Stay at your current dose for 6–8 weeks instead of 4. No prize for reaching 15mg faster.</div>
+<div class="sec">GI triggers — avoid</div>
 <div class="pills">
 <span class="pill">Fried / greasy</span><span class="pill">Alcohol</span><span class="pill">Spicy food</span>
-<span class="pill">Carbonated drinks</span><span class="pill">Large portions</span><span class="pill">Eating too fast</span><span class="pill">High-sugar food</span>
+<span class="pill">Carbonated drinks</span><span class="pill">Large portions</span><span class="pill">Eating too fast</span>
 </div>
-<div class="sec">When GI symptoms hit</div>
+<div class="sec">When GI hits</div>
 <div class="rows">
-<div class="row"><div class="rt">Nausea</div><div class="rs">Zofran (Rx, as needed only). Ginger tea or chews. Small meals. Stay upright 30 min after eating.</div></div>
-<div class="row"><div class="rt">Constipation</div><div class="rs">MiraLax (OTC, as needed). 3L water minimum. Short walk after meals.</div></div>
-<div class="row"><div class="rt">Bloating / diarrhea</div><div class="rs">Eat simple: banana, rice, eggs. Skip cruciferous veg temporarily.</div></div>
-<div class="row"><div class="rt">General rule</div><div class="rs">Overeating on Zepbound punishes itself. The discomfort is the feedback.</div></div>
+<div class="row"><div class="rt">Nausea</div><div class="rs">Zofran (Rx, as needed only). Ginger tea. Stay upright 30 min after eating.</div></div>
+<div class="row"><div class="rt">Constipation</div><div class="rs">MiraLax (OTC, as needed). 3L water. Short walk after meals.</div></div>
+<div class="row"><div class="rt">Bloating</div><div class="rs">Eat simple: banana, rice, eggs. Skip cruciferous veg temporarily.</div></div>
 </div>
-</div>
-
-<div id="p-supps" class="panel p-supps">
-<h1>Supplements</h1>
-<div class="sec" style="margin-top:0">Every day — including rest days</div>
+<div class="sec">Daily supplements</div>
 <div class="rows">
-<div class="srow"><div class="sinfo"><div class="sn">Creatine monohydrate <span class="freq fd">daily</span></div><div class="sd">5g · any time · saturation over time is what makes it work</div></div></div>
-<div class="srow"><div class="sinfo"><div class="sn">Magnesium glycinate <span class="freq fd">daily</span></div><div class="sd">300mg · before bed only — sleep, recovery, constipation</div></div></div>
-<div class="srow"><div class="sinfo"><div class="sn">Casein protein <span class="freq fd">daily</span></div><div class="sd">Throughout day + pre-bed · your existing casein is fine</div></div></div>
-</div>
-<div class="sec">Around workouts</div>
-<div class="rows">
+<div class="srow"><div class="sinfo"><div class="sn">Creatine monohydrate <span class="freq fd">daily</span></div><div class="sd">5g · any time · every day including rest days</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">Magnesium glycinate <span class="freq fd">daily</span></div><div class="sd">300mg · before bed only</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">Casein protein <span class="freq fd">daily</span></div><div class="sd">Throughout day + pre-bed</div></div></div>
 <div class="srow"><div class="sinfo"><div class="sn">Electrolytes</div><div class="sd">Pre or intra-workout · LMNT or Liquid IV · low/no sugar</div></div></div>
 </div>
-<div class="sec">As needed only — not daily</div>
+<div class="sec">As needed only</div>
 <div class="rows">
-<div class="srow"><div class="sinfo"><div class="sn">Zofran (ondansetron) <span class="freq fr">Rx</span> <span class="freq fp">as needed</span></div><div class="sd">Only when nauseated. Keep on hand for dose increases.</div></div></div>
-<div class="srow"><div class="sinfo"><div class="sn">MiraLax <span class="freq fp">as needed</span></div><div class="sd">Only when constipated. Tasteless, dissolves in any drink.</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">Zofran (ondansetron) <span class="freq fr">Rx</span> <span class="freq fp">as needed</span></div><div class="sd">Only when nauseated — not daily. Ask prescriber for 10–15 tabs.</div></div></div>
+<div class="srow"><div class="sinfo"><div class="sn">MiraLax <span class="freq fp">as needed</span></div><div class="sd">Only when constipated. Tasteless, any drink.</div></div></div>
 </div>
-<div class="sec">Weekly</div>
-<div class="rows">
-<div class="srow"><div class="sinfo"><div class="sn">Zepbound injection <span class="freq fw">weekly</span> <span class="freq fr">Rx</span></div><div class="sd">Sunday evening · rotate sites · see Drug tab</div></div></div>
-</div>
-<div class="ibox ib-ok">Zofran and MiraLax are rescue meds only. Taking Zofran daily can worsen constipation.</div>
 </div>
 
-<div id="p-out" class="panel p-out">
-<h1>Eating out</h1>
+<!-- ═══ GUIDE (Out + Prep) ═══ -->
+<div id="p-guide" class="panel p-guide">
+<h1>Guide</h1>
 <div class="sec" style="margin-top:0">The order — any restaurant</div>
 <div class="rows">
 <div class="ostep"><div class="onum">1</div><div class="ot">Grilled protein — chicken, fish, or lean beef</div></div>
@@ -193,42 +261,35 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
 </div>
 <div class="sec">Good spots</div>
 <div class="rows">
-<div class="row"><div class="rt">Chipotle</div><div class="rs">Bowl · chicken or steak · rice · black beans · salsa · lettuce</div><div class="rskip">Skip: cheese, sour cream, queso, chips</div></div>
-<div class="row"><div class="rt">Sweetgreen</div><div class="rs">Warm bowl · chicken · grain · vinaigrette dressing</div><div class="rskip">Skip: creamy dressings, croutons</div></div>
+<div class="row"><div class="rt">Chipotle</div><div class="rs">Bowl · chicken · rice · black beans · salsa · lettuce</div><div class="rskip">Skip: cheese, sour cream, queso, chips</div></div>
+<div class="row"><div class="rt">Sweetgreen</div><div class="rs">Warm bowl · chicken · grain · vinaigrette</div><div class="rskip">Skip: creamy dressings, croutons</div></div>
 <div class="row"><div class="rt">Mediterranean / halal</div><div class="rs">Chicken over rice · tomato-based sauce</div><div class="rskip">Skip: white garlic sauce — high fat</div></div>
 <div class="row"><div class="rt">Japanese</div><div class="rs">Sashimi · edamame · miso soup · rice bowl</div><div class="rskip">Skip: tempura, mayo rolls</div></div>
 <div class="row"><div class="rt">Thai</div><div class="rs">Stir-fried protein · jasmine rice · tom yum</div><div class="rskip">Skip: coconut curries, fried rice</div></div>
 </div>
 <div class="sec">Work dinners</div>
 <div class="rows">
-<div class="row"><div class="rt">Order first</div><div class="rs">Before anyone else — avoids the social gravity of the table ordering fried apps.</div></div>
-<div class="row"><div class="rt">Alcohol: 1 drink max</div><div class="rs">Zepbound makes alcohol absorb faster. 1 drink hits like 1.5. Wine or light beer with food only.</div></div>
+<div class="row"><div class="rt">Order first</div><div class="rs">Before anyone else. Avoids the social gravity of the table ordering fried apps.</div></div>
+<div class="row"><div class="rt">Alcohol: 1 drink max</div><div class="rs">Zepbound amplifies absorption. 1 drink hits like 1.5. Wine or light beer only.</div></div>
 <div class="row"><div class="rt">Social cover</div><div class="rs">"Not that hungry tonight" — no one questions it.</div></div>
 </div>
-<div class="sec">Travel</div>
+<div class="sec">Travel pack</div>
 <div class="rows">
+<div class="row"><div class="rt">Zepbound pens</div><div class="rs">Carry-on OK · room temp 21 days · no ice needed</div></div>
 <div class="row"><div class="rt">Pack</div><div class="rs">RXBAR/Quest bars · creatine packs · electrolyte sticks · casein sachets</div></div>
-<div class="row"><div class="rt">Zepbound</div><div class="rs">Carry-on OK · room temp 21 days · no ice needed</div></div>
 <div class="row"><div class="rt">Hotel day 1</div><div class="rs">Find nearest grocery store. Greek yogurt + bananas + eggs in mini fridge.</div></div>
 <div class="row"><div class="rt">Hotel breakfast</div><div class="rs">Eggs + oatmeal + fruit only. Skip everything else.</div></div>
 </div>
-</div>
-
-<div id="p-prep" class="panel p-prep">
-<h1>Sunday prep</h1>
-<div class="ibox ib-ok" style="margin-top:0">~65 min total · ~20 min hands-on · start oven and air fryer first, then stovetop while they run</div>
-<div class="sec" style="margin-top:12px">Step by step</div>
+<div class="sec">Sunday prep — ~65 min</div>
 <div class="rows">
-<div class="pstep"><span class="ptime">0:00</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Preheat to 400°F</div><div class="pn">Needs 10 min to reach temp — start here.</div></div></div>
-<div class="pstep"><span class="ptime">0:10</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Sweet potatoes in — 50 min</div><div class="pn">Whole, unpeeled. Score skin with a fork first.</div></div></div>
+<div class="pstep"><span class="ptime">0:00</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Preheat to 400°F</div></div></div>
+<div class="pstep"><span class="ptime">0:10</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Sweet potatoes in — 50 min</div><div class="pn">Whole, unpeeled. Score skin with fork.</div></div></div>
 <div class="pstep"><span class="ptime">0:10</span><span class="ptool pt-air">Air fryer</span><div><div class="pa">Chicken — 380°F, 22 min</div><div class="pn">Pat dry. Salt, pepper, garlic powder. Flip at 11 min.</div></div></div>
-<div class="pstep"><span class="ptime">0:12</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Rice — 2 cups rice, 3.5 cups water</div><div class="pn">Boil then simmer covered 18 min. Don't lift lid.</div></div></div>
-<div class="pstep"><span class="ptime">0:20</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Hard-boil 6 eggs — 10 min</div><div class="pn">Into boiling water. 10 min, then ice bath.</div></div></div>
-<div class="pstep"><span class="ptime">0:30</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Rice + eggs done — cool and set aside</div><div class="pn">Fluff rice uncovered. Eggs into ice bath 5 min.</div></div></div>
-<div class="pstep"><span class="ptime">0:32</span><span class="ptool pt-air">Air fryer</span><div><div class="pa">Chicken done — rest 5 min, store whole</div><div class="pn">Don't slice until cooled. Keeps moisture in.</div></div></div>
-<div class="pstep"><span class="ptime">0:33</span><span class="ptool pt-cast">Cast iron</span><div><div class="pa">Ground beef (1 lb) — medium-high, 10 min</div><div class="pn">Break up as it cooks. Cumin + garlic powder + salt. Drain fat.</div></div></div>
-<div class="pstep"><span class="ptime">0:35</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Sheet pan: carrots + zucchini — 25 min</div><div class="pn">Toss in olive oil + salt. Single layer.</div></div></div>
-<div class="pstep"><span class="ptime">1:00</span><span class="ptool pt-done">Done</span><div><div class="pa">Everything out — cool and container</div><div class="pn">Cool to room temp before lidding. Salmon always fresh, never batch.</div></div></div>
+<div class="pstep"><span class="ptime">0:12</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Rice — 2 cups rice, 3.5 cups water, 18 min</div></div></div>
+<div class="pstep"><span class="ptime">0:20</span><span class="ptool pt-stove">Stovetop</span><div><div class="pa">Hard-boil 6 eggs — 10 min then ice bath</div></div></div>
+<div class="pstep"><span class="ptime">0:33</span><span class="ptool pt-cast">Cast iron</span><div><div class="pa">Ground beef (1 lb) — 10 min</div><div class="pn">Cumin + garlic powder + salt. Drain fat.</div></div></div>
+<div class="pstep"><span class="ptime">0:35</span><span class="ptool pt-oven">Oven</span><div><div class="pa">Sheet pan: carrots + zucchini — 25 min</div></div></div>
+<div class="pstep"><span class="ptime">1:00</span><span class="ptool pt-done">Done</span><div><div class="pa">Cool everything, then container and fridge</div><div class="pn">Salmon always fresh — never batch.</div></div></div>
 </div>
 <div class="sec">Storage life — fridge</div>
 <div class="sg">
@@ -239,90 +300,496 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px}
 <div class="sc"><div class="scn">Roasted veg</div><div class="scl">4 days</div></div>
 <div class="sc"><div class="scn">Sweet potatoes</div><div class="scl">5 days</div></div>
 </div>
-<div class="ibox ib-warn">Salmon: never batch cook. Air fryer 400°F, 11 min fresh on Tue and Thu nights. Reheated salmon is a completely different (worse) food.</div>
 </div>
 
-<div id="p-shop" class="panel p-shop">
-<h1>Grocery list</h1>
-<div class="ibox ib-info" style="margin-top:0">Mark your week. The list adjusts for days you eat out, travel, or have a date night.</div>
-<div class="sec" style="margin-top:12px">Legend &nbsp;·&nbsp; <span style="font-weight:400;text-transform:none;letter-spacing:0">— Normal &nbsp; 🍽 Lunch out &nbsp; ✈️ Travel &nbsp; ♥ Date night</span></div>
-<div class="rows" id="day-selector"></div>
-<div class="top-row" style="margin-top:20px">
-  <span class="sec" style="margin:0">Shopping list</span>
-  <button class="rst-btn" onclick="resetAll()">Reset week</button>
-</div>
-<div id="grocery-list"></div>
-</div>
-
+<!-- ═══ NAV ═══ -->
 <nav class="nav">
 <button class="nb active" data-t="food" onclick="sw('food')"><span class="ni">🥗</span>Food</button>
-<button class="nb" data-t="drug" onclick="sw('drug')"><span class="ni">💊</span>Drug</button>
-<button class="nb" data-t="supps" onclick="sw('supps')"><span class="ni">⚡</span>Supps</button>
-<button class="nb" data-t="out" onclick="sw('out')"><span class="ni">📍</span>Out</button>
-<button class="nb" data-t="prep" onclick="sw('prep')"><span class="ni">🥘</span>Prep</button>
+<button class="nb" data-t="recipes" onclick="sw('recipes')"><span class="ni">📖</span>Recipes</button>
+<button class="nb" data-t="plan" onclick="sw('plan')"><span class="ni">📅</span>Plan</button>
 <button class="nb" data-t="shop" onclick="sw('shop')"><span class="ni">🛒</span>Shop</button>
+<button class="nb" data-t="health" onclick="sw('health')"><span class="ni">💊</span>Health</button>
+<button class="nb" data-t="guide" onclick="sw('guide')"><span class="ni">🗺️</span>Guide</button>
 </nav>
 
 <script>
+// ════════════════════════════════════════
+// RECIPE DATA
+// ════════════════════════════════════════
+const RECIPES = [
+  // BREAKFAST
+  {id:'b1',cat:'breakfast',name:'Greek Yogurt Oat Bowl',time:5,protein:30,
+   desc:'No cooking. Mix and eat. Works as overnight oats too.',badge:null,
+   ingredients:[
+     {key:'yogurt',qty:1,label:'1 Greek yogurt container (plain)'},
+     {key:'banana',qty:1,label:'1 banana, sliced'},
+     {key:'oats',pantry:true,label:'½ cup rolled oats'}
+   ],
+   steps:['Mix Greek yogurt and oats in a bowl','Slice banana on top','Optional: drizzle honey'],
+   sauce:null},
+  {id:'b2',cat:'breakfast',name:'Scrambled Eggs + Oats',time:10,protein:28,
+   desc:'Oats in the microwave while eggs cook. Classic.',badge:null,
+   ingredients:[
+     {key:'eggs',qty:3,label:'3 large eggs'},
+     {key:'banana',qty:1,label:'1 banana (side)'},
+     {key:'oats',pantry:true,label:'½ cup rolled oats + 1 cup water'}
+   ],
+   steps:['Microwave oats + water 2–2.5 min (watch for overflow)','Scramble eggs in cast iron 3–4 min','Plate together, banana on the side'],
+   sauce:null},
+  {id:'b3',cat:'breakfast',name:'Overnight Oats',time:0,protein:30,
+   desc:'5 min prep the night before. Zero work in the morning.',badge:null,
+   ingredients:[
+     {key:'yogurt',qty:1,label:'1 Greek yogurt container (plain)'},
+     {key:'banana',qty:1,label:'1 banana — slice fresh in the morning'},
+     {key:'oats',pantry:true,label:'½ cup rolled oats + ½ cup water'}
+   ],
+   steps:['Night before: mix oats + yogurt + water in a jar','Cover and refrigerate overnight','Morning: stir, slice banana on top, eat cold'],
+   sauce:null},
+  {id:'b4',cat:'breakfast',name:'Cottage Cheese Power Bowl',time:5,protein:26,
+   desc:'Slower digesting than yogurt. Good when appetite is suppressed.',badge:null,
+   ingredients:[
+     {key:'cottage',qty:0.5,label:'½ cup cottage cheese'},
+     {key:'banana',qty:1,label:'1 banana, sliced'},
+     {key:'oats',pantry:true,label:'½ cup rolled oats (microwaved)'}
+   ],
+   steps:['Microwave oats with water 2 min','Top with cottage cheese and sliced banana','Season with cinnamon if desired'],
+   sauce:null},
+  // LUNCH
+  {id:'l1',cat:'lunch',name:'Chicken Soy Lemon Bowl',time:5,protein:38,
+   desc:'The default. Batch chicken + rice + spinach. Assemble and eat.',badge:'batch',
+   ingredients:[
+     {key:'chicken',qty:0.4,label:'6oz batch chicken (shredded or sliced)'},
+     {key:'spinach',qty:0.2,label:'Handful baby spinach (raw)'},
+     {key:'lemon',qty:0.5,label:'½ lemon'},
+     {key:'rice',pantry:true,label:'½ cup cooked rice'}
+   ],
+   steps:['Plate chicken over rice with raw spinach','Drizzle soy sauce and squeeze lemon over everything'],
+   sauce:'Soy sauce + lemon squeeze'},
+  {id:'l2',cat:'lunch',name:'Chicken Sweet Potato Bowl',time:5,protein:36,
+   desc:'Swap rice for sweet potato. More fiber, different texture.',badge:'batch',
+   ingredients:[
+     {key:'chicken',qty:0.4,label:'6oz batch chicken'},
+     {key:'sweet_potato',qty:1,label:'1 batch sweet potato (reheated)'},
+     {key:'carrots',qty:0.3,label:'Batch roasted carrots'}
+   ],
+   steps:['Warm sweet potato 1–2 min in microwave','Plate chicken alongside sweet potato and carrots','Top with cumin yogurt sauce'],
+   sauce:'Cumin yogurt: 2 tbsp Greek yogurt + pinch cumin + garlic powder + lemon'},
+  {id:'l3',cat:'lunch',name:'Ground Beef Rice Bowl',time:5,protein:35,
+   desc:'Batch beef over rice with chickpeas. Filing and high protein.',badge:'batch',
+   ingredients:[
+     {key:'beef',qty:0.25,label:'4oz batch ground beef (reheated)'},
+     {key:'spinach',qty:0.2,label:'Handful baby spinach'},
+     {key:'chickpeas',pantry:true,label:'¼ can chickpeas, drained'},
+     {key:'rice',pantry:true,label:'½ cup cooked rice'}
+   ],
+   steps:['Warm beef in pan 2–3 min or microwave','Plate over rice with chickpeas and raw spinach','Season with soy sauce and cumin'],
+   sauce:'Soy sauce + cumin + garlic powder'},
+  {id:'l4',cat:'lunch',name:'Turkey Rice Cake Stack',time:3,protein:25,
+   desc:'Zero cooking. Easy grab-and-go lunch.',badge:null,
+   ingredients:[
+     {key:'turkey',qty:0.2,label:'3oz deli turkey'},
+     {key:'avocado',qty:0.5,label:'½ avocado, sliced'},
+     {key:'eggs',qty:1,label:'1 hard-boiled egg (batch)'},
+     {key:'rice_cakes',pantry:true,label:'3 rice cakes'}
+   ],
+   steps:['Layer turkey on rice cakes','Slice avocado alongside','Peel and halve the egg. Salt and pepper.'],
+   sauce:null},
+  {id:'l5',cat:'lunch',name:'Chicken Avocado Bowl',time:5,protein:38,
+   desc:'Olive oil and avocado instead of soy. More healthy fat.',badge:'batch',
+   ingredients:[
+     {key:'chicken',qty:0.4,label:'6oz batch chicken'},
+     {key:'avocado',qty:0.5,label:'½ avocado, sliced'},
+     {key:'spinach',qty:0.2,label:'Handful baby spinach'},
+     {key:'lemon',qty:0.5,label:'½ lemon'},
+     {key:'rice',pantry:true,label:'½ cup cooked rice'}
+   ],
+   steps:['Plate chicken over rice and raw spinach','Fan avocado slices alongside','Drizzle olive oil and squeeze lemon over everything'],
+   sauce:'Olive oil + lemon + pinch salt'},
+  // DINNER
+  {id:'d1',cat:'dinner',name:'Lemon Herb Salmon',time:15,protein:40,
+   desc:'Air fryer salmon with rice and spinach. Always cook fresh.',badge:'fresh cook',
+   ingredients:[
+     {key:'salmon',qty:1,label:'1 salmon fillet (6oz)'},
+     {key:'spinach',qty:0.2,label:'Handful baby spinach (raw)'},
+     {key:'lemon',qty:0.5,label:'½ lemon'},
+     {key:'rice',pantry:true,label:'½ cup cooked rice'}
+   ],
+   steps:['Brush salmon with olive oil, salt, pepper, pinch garlic powder','Air fryer 400°F for 11 min — no flipping needed','Plate over rice with spinach. Squeeze lemon over everything.'],
+   sauce:'Lemon squeeze + olive oil'},
+  {id:'d2',cat:'dinner',name:'Soy Sesame Salmon',time:15,protein:40,
+   desc:'Same air fryer salmon, Asian-style with sweet potato and zucchini.',badge:'fresh cook',
+   ingredients:[
+     {key:'salmon',qty:1,label:'1 salmon fillet (6oz)'},
+     {key:'sweet_potato',qty:1,label:'1 batch sweet potato (reheated)'},
+     {key:'zucchini',qty:1,label:'Batch roasted zucchini'},
+     {key:'lemon',qty:0.5,label:'½ lemon'}
+   ],
+   steps:['Air fryer salmon 400°F for 11 min','Warm sweet potato and zucchini from batch','Plate together, drizzle soy sesame sauce over salmon'],
+   sauce:'Soy sauce + ½ tsp sesame oil + lemon squeeze'},
+  {id:'d3',cat:'dinner',name:'Cumin Beef Bowl',time:10,protein:38,
+   desc:'Batch beef reheated with chickpeas and cumin yogurt. Under 10 min.',badge:'batch',
+   ingredients:[
+     {key:'beef',qty:0.3,label:'5oz batch ground beef (reheated)'},
+     {key:'chickpeas',pantry:true,label:'¼ can chickpeas, drained'},
+     {key:'rice',pantry:true,label:'½ cup cooked rice'}
+   ],
+   steps:['Warm beef in cast iron with chickpeas 3–4 min','Plate over rice','Top generously with cumin yogurt sauce'],
+   sauce:'Cumin yogurt: 2 tbsp Greek yogurt + cumin + garlic powder + lemon + salt'},
+  {id:'d4',cat:'dinner',name:'Cast Iron Chicken + Veg',time:25,protein:38,
+   desc:'Fresh chicken thighs when you feel like actually cooking. Crispy.',badge:'fresh cook',
+   ingredients:[
+     {key:'chicken',qty:0.5,label:'2 chicken thighs'},
+     {key:'sweet_potato',qty:1,label:'1 sweet potato (batch or roast fresh)'},
+     {key:'carrots',qty:0.3,label:'Roasted carrots (batch)'}
+   ],
+   steps:['Season thighs: salt, pepper, garlic powder, olive oil','Cast iron medium-high — 5 min per side','Oven at 400°F for 12–15 min. Serve with veg.'],
+   sauce:'Lemon squeeze + olive oil over finished dish'},
+  {id:'d5',cat:'dinner',name:'Simple Egg Scramble',time:10,protein:24,
+   desc:'Light dinner for low-appetite days or when the fridge is bare.',badge:null,
+   ingredients:[
+     {key:'eggs',qty:3,label:'3 large eggs'},
+     {key:'spinach',qty:0.2,label:'Handful baby spinach'},
+     {key:'rice',pantry:true,label:'½ cup leftover rice (optional)'}
+   ],
+   steps:['Scramble eggs in cast iron over medium heat','Add spinach last 30 seconds — wilts quickly','Plate over rice. Season with soy sauce.'],
+   sauce:'Soy sauce or hot sauce'},
+  // SNACKS
+  {id:'s1',cat:'snack',name:'Pre-Workout Shake',time:2,protein:25,
+   desc:'Light fuel 45–60 min before training. Never train fasted.',badge:null,
+   ingredients:[
+     {key:'banana',qty:1,label:'1 banana'},
+     {key:'casein',pantry:true,label:'1 scoop casein protein + water'}
+   ],
+   steps:['Shake casein with water','Eat banana alongside or blend it in'],
+   sauce:null},
+  {id:'s2',cat:'snack',name:'Hard-Boiled Eggs + Rice Cakes',time:2,protein:18,
+   desc:'Quick grab from the batch. Crunchy and filling.',badge:'batch',
+   ingredients:[
+     {key:'eggs',qty:2,label:'2 hard-boiled eggs (batch)'},
+     {key:'rice_cakes',pantry:true,label:'2–3 rice cakes'}
+   ],
+   steps:['Peel eggs from batch. Halve and season with salt and pepper.','Eat with rice cakes'],
+   sauce:null},
+  {id:'s3',cat:'snack',name:'Greek Yogurt Cup',time:1,protein:17,
+   desc:'Quick protein hit. Add honey or banana if appetite allows.',badge:null,
+   ingredients:[
+     {key:'yogurt',qty:1,label:'1 Greek yogurt container (plain)'}
+   ],
+   steps:['Open container','Optional: stir in honey or top with sliced banana'],
+   sauce:null},
+  {id:'s4',cat:'snack',name:'Turkey Avocado Bites',time:3,protein:16,
+   desc:'No cooking. Satisfies savory cravings without triggering GI.',badge:null,
+   ingredients:[
+     {key:'turkey',qty:0.15,label:'2oz deli turkey'},
+     {key:'avocado',qty:0.5,label:'½ avocado'},
+     {key:'rice_cakes',pantry:true,label:'2 rice cakes'}
+   ],
+   steps:['Slice avocado','Fold turkey slices on rice cakes','Top with avocado. Squeeze lemon if desired.'],
+   sauce:null},
+];
+
+// ════════════════════════════════════════
+// GROCERY ITEM DEFINITIONS
+// ════════════════════════════════════════
+function fl(q){const r=Math.round(q*4)/4;const m={0.25:'1/4 lb',0.5:'1/2 lb',0.75:'3/4 lb',1:'1 lb',1.25:'1 1/4 lbs',1.5:'1 1/2 lbs',1.75:'1 3/4 lbs',2:'2 lbs',2.25:'2 1/4 lbs',2.5:'2 1/2 lbs'};return m[r]||(r+' lbs');}
+const GITEMS=[
+  {k:'chicken',l:'Chicken thighs or breast',c:'p',f:q=>q<0.4?null:fl(q)},
+  {k:'salmon',l:'Salmon (6oz each)',c:'p',f:q=>q<1?null:q+(q===1?' portion':' portions')},
+  {k:'beef',l:'Ground beef 90/10',c:'p',f:q=>q<0.25?null:fl(q)},
+  {k:'eggs',l:'Eggs',c:'p',f:q=>q<2?null:(Math.ceil(q/6)*6)+' ct'},
+  {k:'yogurt',l:'Greek yogurt (plain)',c:'p',f:q=>q<0.5?null:Math.ceil(q)+' containers'},
+  {k:'cottage',l:'Cottage cheese',c:'p',f:q=>q<0.5?null:Math.ceil(q)+' containers'},
+  {k:'turkey',l:'Deli turkey',c:'p',f:q=>q<0.1?null:fl(q)},
+  {k:'banana',l:'Bananas',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+  {k:'sweet_potato',l:'Sweet potatoes',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+  {k:'avocado',l:'Avocados',c:'v',f:q=>q<0.5?null:Math.ceil(q)+' count'},
+  {k:'spinach',l:'Baby spinach (5oz bag)',c:'v',f:q=>q<=0?null:'1 bag'},
+  {k:'zucchini',l:'Zucchini',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
+  {k:'carrots',l:'Carrots',c:'v',f:q=>q<=0?null:'1 bag'},
+  {k:'lemon',l:'Lemons',c:'v',f:q=>q<0.5?null:Math.ceil(q)+' count'},
+];
+const PANTRY=['Rolled oats','White rice','Rice cakes','Olive oil','Low-sodium soy sauce','Canned chickpeas (x2)'];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TRAIN={Mon:true,Tue:true,Wed:false,Thu:true,Fri:false,Sat:true,Sun:false};
+const MEALS=['breakfast','lunch','dinner'];
+const CAT_LABELS={all:'All',breakfast:'Breakfast',lunch:'Lunch',dinner:'Dinner',snack:'Snacks'};
+
+let weekPlan={};
+let dayStatus={};
+let checked={};
+let activeCat='all';
+let activePlanDay='Mon';
+let activePicker=null; // {day,meal} or null
+
+DAYS.forEach(d=>{weekPlan[d]={breakfast:null,lunch:null,dinner:null};dayStatus[d]='normal';});
+
+// Load from localStorage
+try{
+  const wp=localStorage.getItem('oh_plan');
+  const ds=localStorage.getItem('oh_ds');
+  const ck=localStorage.getItem('oh_ck');
+  if(wp)weekPlan=JSON.parse(wp);
+  if(ds)dayStatus=JSON.parse(ds);
+  if(ck)checked=JSON.parse(ck);
+}catch(e){}
+
+function save(){
+  try{
+    localStorage.setItem('oh_plan',JSON.stringify(weekPlan));
+    localStorage.setItem('oh_ds',JSON.stringify(dayStatus));
+    localStorage.setItem('oh_ck',JSON.stringify(checked));
+  }catch(e){}
+}
+
+// ════════════════════════════════════════
+// TAB SWITCH
+// ════════════════════════════════════════
 function sw(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   document.getElementById('p-'+id).classList.add('active');
   document.querySelector('[data-t="'+id+'"]').classList.add('active');
   window.scrollTo(0,0);
+  if(id==='plan')renderPlanner();
+  if(id==='shop'){renderDayBar();renderGrocery();}
 }
 
-const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const TRAIN={Mon:true,Tue:true,Wed:false,Thu:true,Fri:false,Sat:true,Sun:false};
-const BASE={chicken:1.75,salmon:2,beef:1.0,eggs:14,yogurt:5,banana:7,cottage:2,turkey:0.5,sweet_potato:4,avocado:3,spinach:1,zucchini:2,carrots:1,lemon:4};
-const DEDUCT={
-  Mon:{lunchOut:{chicken:0.4},travel:{chicken:0.4,beef:0.35,eggs:3,banana:1,cottage:0.5,spinach:0.3,carrots:0.4},dateNight:{beef:0.35}},
-  Tue:{lunchOut:{chicken:0.4},travel:{chicken:0.4,salmon:1,banana:1,yogurt:1,zucchini:1,spinach:0.3,lemon:1},dateNight:{salmon:1,zucchini:1,lemon:1}},
-  Wed:{lunchOut:{chicken:0.4},travel:{chicken:0.4,beef:0.35,banana:1,yogurt:1,avocado:0.5,sweet_potato:0.5,spinach:0.3,cottage:0.5},dateNight:{beef:0.35,sweet_potato:0.5}},
-  Thu:{lunchOut:{beef:0.25},travel:{beef:0.25,salmon:1,banana:1,eggs:3,sweet_potato:0.5,zucchini:1,avocado:0.5,lemon:1},dateNight:{salmon:1,sweet_potato:0.5,zucchini:1,lemon:1}},
-  Fri:{lunchOut:{turkey:0.15,avocado:0.5,eggs:1},travel:{turkey:0.15,yogurt:1,banana:1,eggs:4,avocado:0.5,spinach:0.3,cottage:0.5},dateNight:{eggs:3}},
-  Sat:{lunchOut:{turkey:0.15,avocado:0.5},travel:{turkey:0.15,banana:1,yogurt:1,eggs:1,avocado:0.5},dateNight:{}},
-  Sun:{lunchOut:{eggs:2},travel:{yogurt:1,banana:1,eggs:3,turkey:0.15,avocado:0.5,cottage:0.5},dateNight:{turkey:0.15}}
-};
-function fl(q){const r=Math.round(q*4)/4;const m={0.25:'1/4 lb',0.5:'1/2 lb',0.75:'3/4 lb',1:'1 lb',1.25:'1 1/4 lbs',1.5:'1 1/2 lbs',1.75:'1 3/4 lbs',2:'2 lbs',2.25:'2 1/4 lbs',2.5:'2 1/2 lbs'};return m[r]||(r+' lbs');}
-const ITEMS=[
-  {k:'chicken',l:'Chicken thighs or breast',c:'p',f:q=>q<0.4?null:fl(q)},
-  {k:'salmon',l:'Salmon (6oz each)',c:'p',f:q=>q<1?null:q+(q===1?' portion':' portions')},
-  {k:'beef',l:'Ground beef 90/10',c:'p',f:q=>q<0.25?null:fl(q)},
-  {k:'eggs',l:'Eggs',c:'p',f:q=>q<2?null:(Math.ceil(q/6)*6)+' ct'},
-  {k:'yogurt',l:'Greek yogurt (plain)',c:'p',f:q=>q<1?null:Math.ceil(q)+' containers'},
-  {k:'cottage',l:'Cottage cheese',c:'p',f:q=>q<0.5?null:Math.ceil(q)+' containers'},
-  {k:'turkey',l:'Deli turkey',c:'p',f:q=>q<0.1?null:fl(q)},
-  {k:'banana',l:'Bananas',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
-  {k:'sweet_potato',l:'Sweet potatoes',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
-  {k:'avocado',l:'Avocados',c:'v',f:q=>q<0.5?null:Math.ceil(q)+' count'},
-  {k:'spinach',l:'Baby spinach (5oz bag)',c:'v',f:q=>q<0.4?null:'1 bag'},
-  {k:'zucchini',l:'Zucchini',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
-  {k:'carrots',l:'Carrots',c:'v',f:q=>q<0.4?null:'1 bag'},
-  {k:'lemon',l:'Lemons',c:'v',f:q=>q<1?null:Math.ceil(q)+' count'},
-];
-const PANTRY=['Rolled oats','White rice','Rice cakes','Olive oil','Low-sodium soy sauce','Canned chickpeas (x2)'];
-let dayStatus={};let checked={};
-DAYS.forEach(d=>dayStatus[d]='normal');
-try{const ds=localStorage.getItem('zep_ds');const ck=localStorage.getItem('zep_ck');if(ds)dayStatus=JSON.parse(ds);if(ck)checked=JSON.parse(ck);}catch(e){}
-function save(){try{localStorage.setItem('zep_ds',JSON.stringify(dayStatus));localStorage.setItem('zep_ck',JSON.stringify(checked));}catch(e){}}
-function calcTotals(){const t={...BASE};for(const d of DAYS){const s=dayStatus[d];if(s==='normal')continue;const ded=DEDUCT[d][s]||{};for(const[k,v]of Object.entries(ded))t[k]=Math.max(0,(t[k]||0)-v);}return t;}
-function renderDays(){document.getElementById('day-selector').innerHTML=DAYS.map(d=>{const s=dayStatus[d];const tr=TRAIN[d];return`<div class="day-row"><span class="dn">${d}</span><span class="dtb ${tr?'dtb-t':'dtb-r'}">${tr?'T':'R'}</span><div class="sbtns"><button class="sbtn ${s==='normal'?'an':''}" onclick="setDay('${d}','normal')">—</button><button class="sbtn ${s==='lunchOut'?'al':''}" onclick="setDay('${d}','lunchOut')">🍽</button><button class="sbtn ${s==='travel'?'at':''}" onclick="setDay('${d}','travel')">✈️</button><button class="sbtn ${s==='dateNight'?'ad':''}" onclick="setDay('${d}','dateNight')">♥</button></div></div>`;}).join('');}
-function gRow(item,qty){const fq=item.f(qty);if(!fq)return null;const chk=!!checked[item.k];return`<div class="gitem ${chk?'checked':''}" onclick="tog('${item.k}')"><div class="gchk">${chk?'✓':''}</div><div class="gnm">${item.l}</div><div class="gqty">${fq}</div></div>`;}
-function renderGrocery(){const t=calcTotals();const el=document.getElementById('grocery-list');let html='';const pH=ITEMS.filter(i=>i.c==='p').map(i=>gRow(i,t[i.k])).filter(Boolean).join('');if(pH)html+=`<div class="sec">Proteins</div><div class="rows">${pH}</div>`;const vH=ITEMS.filter(i=>i.c==='v').map(i=>gRow(i,t[i.k])).filter(Boolean).join('');if(vH)html+=`<div class="sec">Produce</div><div class="rows">${vH}</div>`;const ptH=PANTRY.map(name=>{const k='pt_'+name.replace(/\W+/g,'');const chk=!!checked[k];return`<div class="gitem ${chk?'checked':''}" onclick="tog('${k}')"><div class="gchk">${chk?'✓':''}</div><div class="gnm">${name}</div><div class="gptry">top up</div></div>`;}).join('');html+=`<div class="sec">Pantry — top up if low</div><div class="rows">${ptH}</div>`;if(!pH&&!vH)html='<div class="empty-msg">No perishables needed — all days are away.</div>'+html;el.innerHTML=html;}
-function setDay(day,status){dayStatus[day]=status;checked={};save();renderDays();renderGrocery();}
-function tog(key){checked[key]=!checked[key];save();renderGrocery();}
-function resetAll(){DAYS.forEach(d=>dayStatus[d]='normal');checked={};save();renderDays();renderGrocery();}
-renderDays();
-renderGrocery();
+// ════════════════════════════════════════
+// RECIPE BROWSER
+// ════════════════════════════════════════
+let expandedRecipe=null;
 
-// Register service worker for offline support
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .catch(err => console.log('SW registration failed:', err));
+function initRecipes(){
+  // Category pills
+  const bar=document.getElementById('cat-bar');
+  bar.innerHTML=['all','breakfast','lunch','dinner','snack'].map(c=>
+    `<button class="cpill ${c===activeCat?'active':''}" onclick="setCat('${c}')">${CAT_LABELS[c]}</button>`
+  ).join('');
+  renderRecipes();
+}
+
+function setCat(cat){
+  activeCat=cat;
+  expandedRecipe=null;
+  document.querySelectorAll('.cpill').forEach((b,i)=>{
+    const cats=['all','breakfast','lunch','dinner','snack'];
+    b.classList.toggle('active',cats[i]===cat);
+  });
+  renderRecipes();
+}
+
+function renderRecipes(){
+  const list=document.getElementById('recipe-list');
+  const filtered=activeCat==='all'?RECIPES:RECIPES.filter(r=>r.cat===activeCat);
+  list.innerHTML=filtered.map(r=>{
+    const open=expandedRecipe===r.id;
+    const badge=r.badge?`<span class="rbadge ${r.badge==='batch'?'rb-batch':'rb-fresh'}">${r.badge}</span>`:'';
+    const ings=r.ingredients.map(i=>`<div class="rcard-ing">${i.label}</div>`).join('');
+    const steps=r.steps.map((s,i)=>`<div class="rcard-step"><span class="rs-n">${i+1}</span><span class="rs-t">${s}</span></div>`).join('');
+    const sauce=r.sauce?`<div class="rcard-sauce">🧄 ${r.sauce}</div>`:'';
+    return`<div class="rcard">
+      <div class="rcard-top" onclick="toggleRecipe('${r.id}')">
+        <div class="rcard-head">
+          <span class="rcard-name">${r.name}</span>
+          <span class="rcard-pro">${r.protein}g</span>
+        </div>
+        <div class="rcard-meta">
+          <span>${r.time===0?'Prep night before':r.time+' min'}</span>
+          ${badge}
+        </div>
+        <div class="rcard-desc">${r.desc}</div>
+      </div>
+      <div class="rcard-body ${open?'':'hide'}">
+        <div class="rcard-sec">Ingredients</div>${ings}
+        <div class="rcard-sec">Steps</div>${steps}
+        ${sauce}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleRecipe(id){
+  expandedRecipe=expandedRecipe===id?null:id;
+  renderRecipes();
+}
+
+// ════════════════════════════════════════
+// PLANNER
+// ════════════════════════════════════════
+function planStats(){
+  let count=0,totalPro=0;
+  DAYS.forEach(d=>MEALS.forEach(m=>{
+    const rid=weekPlan[d][m];
+    if(rid){const r=RECIPES.find(x=>x.id===rid);if(r){count++;totalPro+=r.protein;}}
+  }));
+  return{count,totalPro};
+}
+
+function dayFillClass(day){
+  const planned=MEALS.filter(m=>weekPlan[day][m]).length;
+  if(planned===3)return'full';
+  if(planned>0)return'partial';
+  return'';
+}
+
+function renderPlanner(){
+  // Summary stats
+  const stats=planStats();
+  document.getElementById('plan-stat').innerHTML=`
+    <div class="ps-card"><div class="ps-num">${stats.count}</div><div class="ps-lbl">meals planned</div></div>
+    <div class="ps-card"><div class="ps-num" style="color:var(--b)">${stats.totalPro}</div><div class="ps-lbl">total protein (g)</div></div>
+  `;
+  // Day bar
+  document.getElementById('pday-bar').innerHTML=DAYS.map(d=>`
+    <button class="pdb ${d===activePlanDay?'active':''} ${dayFillClass(d)}" onclick="setPlanDay('${d}')">
+      <span class="pd-n">${d}</span>
+      <span class="pd-t">${TRAIN[d]?'T':'R'}</span>
+    </button>
+  `).join('');
+  // Slots
+  const catMap={breakfast:'breakfast',lunch:'lunch',dinner:'dinner'};
+  const labelMap={breakfast:'Breakfast',lunch:'Lunch',dinner:'Dinner'};
+  document.getElementById('plan-slots').innerHTML=MEALS.map(meal=>{
+    const rid=weekPlan[activePlanDay][meal];
+    const recipe=rid?RECIPES.find(r=>r.id===rid):null;
+    const pickerOpen=activePicker&&activePicker.day===activePlanDay&&activePicker.meal===meal;
+    const recipeFilter=RECIPES.filter(r=>r.cat===catMap[meal]);
+    const pickerHTML=pickerOpen?`
+      <div class="picker">
+        ${recipeFilter.map(r=>`
+          <div class="pk-item" onclick="selectRecipe('${activePlanDay}','${meal}','${r.id}')">
+            <span class="pk-name">${r.name}</span>
+            <span class="pk-pro">${r.protein}g</span>
+            <span class="pk-time">${r.time===0?'prep ahead':r.time+'m'}</span>
+          </div>
+        `).join('')}
+        <div class="pk-cancel" onclick="closePicker()">Cancel</div>
+      </div>
+    `:'';
+    const slotContent=recipe?`
+      <div class="slot-recipe">
+        <span class="slot-rname">${recipe.name}</span>
+        <span class="slot-rpro">${recipe.protein}g</span>
+      </div>
+      <button class="slot-rm" onclick="removeRecipe('${activePlanDay}','${meal}')">×</button>
+    `:`<button class="slot-add" onclick="openPicker('${activePlanDay}','${meal}')">+ Add ${meal}</button>`;
+    return`<div class="plan-slot">
+      <div class="slot-head">
+        <span class="slot-lbl">${labelMap[meal]}</span>
+        ${slotContent}
+      </div>
+      ${pickerHTML}
+    </div>`;
+  }).join('');
+}
+
+function setPlanDay(day){activePlanDay=day;activePicker=null;renderPlanner();}
+function openPicker(day,meal){activePicker={day,meal};renderPlanner();}
+function closePicker(){activePicker=null;renderPlanner();}
+function selectRecipe(day,meal,rid){weekPlan[day][meal]=rid;activePicker=null;save();renderPlanner();}
+function removeRecipe(day,meal){weekPlan[day][meal]=null;activePicker=null;save();renderPlanner();}
+
+// ════════════════════════════════════════
+// GROCERY
+// ════════════════════════════════════════
+function calcGrocery(){
+  const totals={};
+  GITEMS.forEach(i=>totals[i.k]=0);
+  for(const day of DAYS){
+    const st=dayStatus[day];
+    let meals=[];
+    if(st==='travel')meals=[];
+    else if(st==='lunchOut')meals=['breakfast','dinner'];
+    else if(st==='dateNight')meals=['breakfast','lunch'];
+    else meals=[...MEALS];
+    for(const meal of meals){
+      const rid=weekPlan[day][meal];
+      if(!rid)continue;
+      const recipe=RECIPES.find(r=>r.id===rid);
+      if(!recipe)continue;
+      recipe.ingredients.forEach(ing=>{
+        if(!ing.pantry&&totals[ing.key]!==undefined)totals[ing.key]+=ing.qty;
+      });
+    }
+  }
+  return totals;
+}
+
+function renderDayBar(){
+  document.getElementById('day-selector').innerHTML=DAYS.map(d=>{
+    const s=dayStatus[d];const tr=TRAIN[d];
+    return`<div class="day-row">
+      <span class="dn">${d}</span>
+      <span class="dtb ${tr?'dtb-t':'dtb-r'}">${tr?'T':'R'}</span>
+      <div class="sbtns">
+        <button class="sbtn ${s==='normal'?'an':''}" onclick="setDay('${d}','normal')">—</button>
+        <button class="sbtn ${s==='lunchOut'?'al':''}" onclick="setDay('${d}','lunchOut')">🍽</button>
+        <button class="sbtn ${s==='travel'?'at':''}" onclick="setDay('${d}','travel')">✈️</button>
+        <button class="sbtn ${s==='dateNight'?'ad':''}" onclick="setDay('${d}','dateNight')">♥</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function gRow(item,qty){
+  const fq=item.f(qty);if(!fq)return null;
+  const ck=!!checked[item.k];
+  return`<div class="gitem ${ck?'chk':''}" onclick="tog('${item.k}')">
+    <div class="gchk">${ck?'✓':''}</div>
+    <div class="gnm">${item.l}</div>
+    <div class="gqty">${fq}</div>
+  </div>`;
+}
+
+function renderGrocery(){
+  const t=calcGrocery();
+  const el=document.getElementById('grocery-list');
+  const anyPlan=DAYS.some(d=>MEALS.some(m=>weekPlan[d][m]));
+  let html='';
+  if(!anyPlan){
+    html+=`<div class="shop-empty"><div class="se-t">No meals planned yet</div><div class="se-s">Head to the Plan tab to build your week — your grocery list generates automatically.</div></div>`;
+  }else{
+    const pH=GITEMS.filter(i=>i.c==='p').map(i=>gRow(i,t[i.k])).filter(Boolean).join('');
+    if(pH)html+=`<div class="sec">Proteins</div><div class="rows">${pH}</div>`;
+    const vH=GITEMS.filter(i=>i.c==='v').map(i=>gRow(i,t[i.k])).filter(Boolean).join('');
+    if(vH)html+=`<div class="sec">Produce</div><div class="rows">${vH}</div>`;
+  }
+  const ptH=PANTRY.map(name=>{
+    const k='pt_'+name.replace(/\W+/g,'');const ck=!!checked[k];
+    return`<div class="gitem ${ck?'chk':''}" onclick="tog('${k}')">
+      <div class="gchk">${ck?'✓':''}</div>
+      <div class="gnm">${name}</div>
+      <div class="gptry">top up</div>
+    </div>`;
+  }).join('');
+  html+=`<div class="sec">Pantry — top up if low</div><div class="rows">${ptH}</div>`;
+  el.innerHTML=html;
+}
+
+function setDay(day,status){dayStatus[day]=status;save();renderDayBar();renderGrocery();}
+function tog(key){checked[key]=!checked[key];save();renderGrocery();}
+function resetShop(){checked={};save();renderGrocery();}
+
+// ════════════════════════════════════════
+// SERVICE WORKER
+// ════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
   });
 }
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+initRecipes();
+renderPlanner();
+renderDayBar();
+renderGrocery();
 </script>
 </body>
 </html>
