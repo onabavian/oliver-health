@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { RECIPES, getRecipesByCategory } from '@/lib/recipes-data'
+import { getRecipesByCategory } from '@/lib/recipes-data'
 import type { Recipe, Category } from '@/types'
 
 const CATEGORIES: { value: 'all' | Category; label: string }[] = [
