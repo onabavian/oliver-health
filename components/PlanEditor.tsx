@@ -137,7 +137,7 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
 
   function methodsFor(proteinId: string) {
     return methods
-      .filter(m => m.ingredient_id === proteinId)
+      .filter(m => m.ingredient?.id === proteinId)
       .map(m => ({ id: m.id, label: m.name }))
   }
 
