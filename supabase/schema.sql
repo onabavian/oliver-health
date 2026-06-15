@@ -1,55 +1,94 @@
--- supabase/schema.sql
-create extension if not exists "uuid-ossp";
+-- Drop old tables (no data to preserve)
+drop table if exists steps cascade;
+drop table if exists ingredients cascade;
+drop table if exists recipes cascade;
+drop table if exists week_plan cascade;
+drop table if exists day_status cascade;
 
-create table recipes (
-  id uuid primary key default uuid_generate_v4(),
+-- Core grocery atoms
+create table ingredients (
+  id uuid primary key default gen_random_uuid(),
   name text not null,
-  category text not null check (category in ('breakfast','lunch','dinner','snack')),
-  time_minutes integer not null,
-  protein_g integer not null,
-  description text,
-  badge text check (badge in ('batch','fresh cook')),
-  sauce text,
+  type text not null check (type in ('protein','carb','veggie','dairy','pantry')),
+  default_qty_g integer,
+  default_qty_imperial text,
+  grocery_label text not null,
+  notes text,
+  sort_order integer not null default 0
+);
+
+-- Cooking methods per protein (AI can add new ones)
+create table protein_methods (
+  id uuid primary key default gen_random_uuid(),
+  ingredient_id uuid not null references ingredients(id) on delete cascade,
+  name text not null,
+  steps jsonb not null default '[]',
   source text not null default 'manual' check (source in ('manual','ai_generated')),
   created_at timestamptz default now()
 );
 
-create table ingredients (
-  id uuid primary key default uuid_generate_v4(),
-  recipe_id uuid not null references recipes(id) on delete cascade,
-  grocery_key text,
-  quantity decimal,
-  is_pantry boolean not null default false,
-  display_label text not null,
-  sort_order integer not null default 0
+-- Sauce recipes (AI can add new ones)
+create table sauces (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  components jsonb not null default '[]',
+  instructions text,
+  source text not null default 'manual' check (source in ('manual','ai_generated')),
+  created_at timestamptz default now()
 );
 
-create table steps (
-  id uuid primary key default uuid_generate_v4(),
-  recipe_id uuid not null references recipes(id) on delete cascade,
-  step_order integer not null,
-  instruction text not null
+-- Weekly batch cooking plan
+create table week_batch (
+  id uuid primary key default gen_random_uuid(),
+  week_start date not null unique,
+  protein1_id uuid references ingredients(id),
+  protein1_method_id uuid references protein_methods(id),
+  protein2_id uuid references ingredients(id),
+  protein2_method_id uuid references protein_methods(id),
+  carb1_id uuid references ingredients(id),
+  carb2_id uuid references ingredients(id),
+  veggie1_id uuid references ingredients(id),
+  veggie2_id uuid references ingredients(id),
+  sauce1_id uuid references sauces(id),
+  sauce2_id uuid references sauces(id)
 );
 
-create table week_plan (
-  id uuid primary key default uuid_generate_v4(),
+-- Per-day meal assembly + flags
+create table day_plan (
+  id uuid primary key default gen_random_uuid(),
   week_start date not null,
   day_name text not null check (day_name in ('Mon','Tue','Wed','Thu','Fri','Sat','Sun')),
-  meal text not null check (meal in ('breakfast','lunch','dinner')),
-  recipe_id uuid references recipes(id) on delete set null,
-  unique(week_start, day_name, meal)
-);
-
-create table day_status (
-  id uuid primary key default uuid_generate_v4(),
-  week_start date not null,
-  day_name text not null check (day_name in ('Mon','Tue','Wed','Thu','Fri','Sat','Sun')),
-  status text not null check (status in ('normal','lunchOut','travel','dateNight')) default 'normal',
+  is_workout_day boolean not null default false,
+  needs_preworkout boolean not null default false,
+  eating_out text not null default 'normal' check (eating_out in ('normal','work_lunch','fast_casual','date_restaurant')),
+  breakfast_note text,
+  lunch_protein_method_id uuid references protein_methods(id),
+  lunch_carb_id uuid references ingredients(id),
+  lunch_veggie_id uuid references ingredients(id),
+  lunch_sauce_id uuid references sauces(id),
+  dinner_protein_method_id uuid references protein_methods(id),
+  dinner_carb_id uuid references ingredients(id),
+  dinner_veggie_id uuid references ingredients(id),
+  dinner_sauce_id uuid references sauces(id),
+  snack_note text,
   unique(week_start, day_name)
 );
 
+-- Daily structured journal
+create table journal (
+  id uuid primary key default gen_random_uuid(),
+  date date not null unique,
+  protein_hit_g integer,
+  energy_level smallint check (energy_level between 1 and 5),
+  gi_okay boolean,
+  notes text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- App settings
 create table settings (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   protein_target_g integer not null default 150,
   current_dose_mg decimal not null default 2.5,
   last_injection_date date,
