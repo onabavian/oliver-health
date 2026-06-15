@@ -1,7 +1,12 @@
+import { redirect } from 'next/navigation'
+import { auth } from '@/lib/auth'
 import Navigation from '@/components/Navigation'
 import { UnitProvider } from '@/components/UnitToggle'
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth()
+  if (!session) redirect('/login')
+
   return (
     <UnitProvider>
       <div className="min-h-screen bg-gray-50 pb-20">
