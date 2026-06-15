@@ -1,46 +1,87 @@
-export type Category = 'breakfast' | 'lunch' | 'dinner' | 'snack'
-export type Badge = 'batch' | 'fresh cook'
+export type IngredientType = 'protein' | 'carb' | 'veggie' | 'dairy' | 'pantry'
 export type DayName = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun'
-export type MealType = 'breakfast' | 'lunch' | 'dinner'
-export type DayStatusValue = 'normal' | 'lunchOut' | 'travel' | 'dateNight'
+export type EatingOut = 'normal' | 'work_lunch' | 'fast_casual' | 'date_restaurant'
 export type RecipeSource = 'manual' | 'ai_generated'
+export type UnitSystem = 'imperial' | 'metric'
 
 export interface Ingredient {
-  id?: string
-  recipeId?: string
-  groceryKey: string | null
-  quantity: number | null
-  isPantry: boolean
-  displayLabel: string
+  id: string
+  name: string
+  type: IngredientType
+  defaultQtyG: number | null
+  defaultQtyImperial: string | null
+  groceryLabel: string
+  notes: string | null
   sortOrder: number
 }
 
-export interface Step {
-  id?: string
-  recipeId?: string
-  stepOrder: number
-  instruction: string
+export interface ProteinMethod {
+  id: string
+  ingredientId: string
+  name: string
+  steps: { order: number; instruction: string }[]
+  source: RecipeSource
+  ingredient?: Ingredient
 }
 
-export interface Recipe {
+export interface SauceComponent {
+  item: string
+  qty: string
+  unit: string
+}
+
+export interface Sauce {
   id: string
   name: string
-  category: Category
-  timeMinutes: number
-  proteinG: number
-  description: string
-  badge: Badge | null
-  sauce: string | null
+  components: SauceComponent[]
+  instructions: string | null
   source: RecipeSource
-  ingredients: Ingredient[]
-  steps: Step[]
 }
 
-export interface DayMeals {
-  breakfast: Recipe | null
-  lunch: Recipe | null
-  dinner: Recipe | null
+export interface WeekBatch {
+  weekStart: string
+  protein1Id: string | null
+  protein1MethodId: string | null
+  protein2Id: string | null
+  protein2MethodId: string | null
+  carb1Id: string | null
+  carb2Id: string | null
+  veggie1Id: string | null
+  veggie2Id: string | null
+  sauce1Id: string | null
+  sauce2Id: string | null
 }
 
-export type WeekPlan = Record<DayName, DayMeals>
-export type DayStatuses = Record<DayName, DayStatusValue>
+export interface DayPlan {
+  weekStart: string
+  dayName: DayName
+  isWorkoutDay: boolean
+  needsPreworkout: boolean
+  eatingOut: EatingOut
+  breakfastNote: string | null
+  lunchProteinMethodId: string | null
+  lunchCarbId: string | null
+  lunchVeggieId: string | null
+  lunchSauceId: string | null
+  dinnerProteinMethodId: string | null
+  dinnerCarbId: string | null
+  dinnerVeggieId: string | null
+  dinnerSauceId: string | null
+  snackNote: string | null
+}
+
+export interface JournalEntry {
+  date: string
+  proteinHitG: number | null
+  energyLevel: number | null
+  giOkay: boolean | null
+  notes: string | null
+}
+
+export interface ResolvedMeal {
+  proteinMethod: ProteinMethod | null
+  carb: Ingredient | null
+  veggie: Ingredient | null
+  sauce: Sauce | null
+  estimatedProteinG: number
+}
