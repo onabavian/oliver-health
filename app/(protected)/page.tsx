@@ -1,65 +1,143 @@
-function Section({ emoji, title, badge, badgeColor, children }: {
-  emoji: string
-  title: string
-  badge?: string
-  badgeColor?: string
-  children: React.ReactNode
+import { createServiceClient } from '@/lib/supabase'
+import { getWeekStart } from '@/lib/week'
+import JournalForm from '@/components/JournalForm'
+import type { DayName } from '@/types'
+
+function getTodayName(): DayName {
+  const names: DayName[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  return names[new Date().getDay()]
+}
+
+async function getTodayPlan() {
+  const sb = createServiceClient()
+  const { data } = await sb
+    .from('day_plan')
+    .select(`
+      *,
+      lunch_protein_method:protein_methods!lunch_protein_method_id(name, ingredient:ingredients(name)),
+      lunch_carb:ingredients!lunch_carb_id(name),
+      lunch_veggie:ingredients!lunch_veggie_id(name),
+      lunch_sauce:sauces!lunch_sauce_id(name),
+      dinner_protein_method:protein_methods!dinner_protein_method_id(name, ingredient:ingredients(name)),
+      dinner_carb:ingredients!dinner_carb_id(name),
+      dinner_veggie:ingredients!dinner_veggie_id(name),
+      dinner_sauce:sauces!dinner_sauce_id(name)
+    `)
+    .eq('week_start', getWeekStart())
+    .eq('day_name', getTodayName())
+    .maybeSingle()
+  return data
+}
+
+async function getTodayJournal() {
+  const sb = createServiceClient()
+  const today = new Date().toISOString().slice(0, 10)
+  const { data } = await sb.from('journal').select('*').eq('date', today).maybeSingle()
+  return data
+}
+
+function MealBlock({ label, method, carb, veggie, sauce, skipped, skipReason }: {
+  label: string
+  method: { name: string; ingredient: { name: string } } | null
+  carb: { name: string } | null
+  veggie: { name: string } | null
+  sauce: { name: string } | null
+  skipped?: boolean
+  skipReason?: string
 }) {
   return (
-    <div className="mb-3">
-      {badge && (
-        <p className={`text-xs font-semibold uppercase tracking-wide mb-1 ${badgeColor ?? 'text-gray-500'}`}>
-          {badge}
-        </p>
+    <div className="bg-white rounded-2xl p-4 shadow-sm mb-3">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{label}</p>
+      {skipped ? (
+        <p className="text-sm text-amber-600 font-medium">{skipReason}</p>
+      ) : !method && !carb ? (
+        <p className="text-sm text-gray-400 italic">Not planned — set in Plan tab</p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {method && (
+            <span className="text-sm bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-full font-medium">
+              {method.ingredient.name} — {method.name}
+            </span>
+          )}
+          {carb && <span className="text-sm bg-blue-50 text-blue-800 px-2.5 py-1 rounded-full">{carb.name}</span>}
+          {veggie && <span className="text-sm bg-lime-50 text-lime-800 px-2.5 py-1 rounded-full">{veggie.name}</span>}
+          {sauce && <span className="text-sm bg-amber-50 text-amber-800 px-2.5 py-1 rounded-full">{sauce.name}</span>}
+        </div>
       )}
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <p className="font-semibold text-gray-900 mb-1">{emoji} {title}</p>
-        {children}
-      </div>
     </div>
   )
 }
 
-export default function FoodPage() {
+const EATING_OUT_LABEL: Record<string, string> = {
+  work_lunch: '🍽 Work lunch today',
+  fast_casual: '🥡 Fast casual today',
+  date_restaurant: '♥ Date night tonight',
+}
+
+export default async function TodayPage() {
+  const [plan, journal] = await Promise.all([getTodayPlan(), getTodayJournal()])
+  const today = new Date().toISOString().slice(0, 10)
+  const todayName = getTodayName()
+
+  const lunchOut = plan?.eating_out === 'work_lunch' || plan?.eating_out === 'fast_casual'
+  const dinnerOut = plan?.eating_out === 'date_restaurant'
+
   return (
     <>
-      <h1 className="text-lg font-bold text-gray-900 mb-4">What to eat</h1>
-
-      <Section emoji="⚡" title="Banana + casein shake" badge="Before gym · 45–60 min before" badgeColor="text-amber-700">
-        <p className="text-sm text-gray-600">Never train fasted on Zepbound — glycogen is already lower from the deficit.</p>
-      </Section>
-
-      <Section emoji="💪" title="3 eggs + oats · or Greek yogurt + oats" badge="Post-workout / Breakfast · after gym" badgeColor="text-emerald-700">
-        <p className="text-sm text-gray-600">25–35g protein. Don&apos;t skip on rest days — one of 3–4 daily windows for muscle protein synthesis.</p>
-      </Section>
-
-      <Section emoji="☀️" title="Protein + rice or sweet potato + veg" badge="Lunch · midday" badgeColor="text-blue-700">
-        <p className="text-sm text-gray-600">30–40g protein. Drizzle soy + lemon — same food, tastes intentional. See Recipes tab.</p>
-      </Section>
-
-      <Section emoji="🌙" title="Lean protein + carb + veg" badge="Dinner · evening" badgeColor="text-purple-700">
-        <p className="text-sm text-gray-600">Low fat. Not spicy. Salmon: air fryer 400°F 11 min — always fresh, never batch. Stop at 70–80% full.</p>
-      </Section>
-
-      <Section emoji="😴" title="Cottage cheese (½ cup) or casein shake" badge="Pre-bed · before sleep" badgeColor="text-indigo-700">
-        <p className="text-sm text-gray-600">Slow-release protein feeds muscle repair overnight.</p>
-      </Section>
-
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-4 mb-2">Rules</p>
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        {[
-          { title: 'Stop at 70–80% full', desc: 'Zepbound slows digestion. Eating past this causes nausea and reflux.' },
-          { title: 'Protein every meal', desc: '25–35g per meal · ~150g total per day · this is what keeps the muscle.' },
-          { title: '3–4 meals a day, not 1–2', desc: 'Multiple leucine triggers per day for muscle protein synthesis.' },
-          { title: 'Eat slowly — 20+ min', desc: 'Fullness signals are delayed. Chew thoroughly.' },
-          { title: '16–20oz water on waking', desc: 'Before coffee, before food. Fixes water consistency.' },
-        ].map((rule, i, arr) => (
-          <div key={rule.title} className={`px-4 py-3 ${i < arr.length - 1 ? 'border-b border-gray-100' : ''}`}>
-            <p className="font-medium text-gray-900 text-sm">{rule.title}</p>
-            <p className="text-sm text-gray-500 mt-0.5">{rule.desc}</p>
-          </div>
-        ))}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-lg font-bold text-gray-900">Today · {todayName}</h1>
+        <div className="flex gap-2">
+          {plan?.is_workout_day && (
+            <span className="text-xs font-semibold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">💪 Workout</span>
+          )}
+          {plan?.needs_preworkout && (
+            <span className="text-xs font-semibold bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-full">⚡ Pre-WO</span>
+          )}
+        </div>
       </div>
+
+      {plan?.eating_out && plan.eating_out !== 'normal' && (
+        <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5 mb-3 text-sm font-medium text-amber-800">
+          {EATING_OUT_LABEL[plan.eating_out]}
+        </div>
+      )}
+
+      {plan?.breakfast_note && (
+        <div className="bg-white rounded-2xl p-4 shadow-sm mb-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Breakfast</p>
+          <p className="text-sm text-gray-700">{plan.breakfast_note}</p>
+        </div>
+      )}
+
+      <MealBlock
+        label="Lunch"
+        method={lunchOut ? null : (plan?.lunch_protein_method as { name: string; ingredient: { name: string } } | null)}
+        carb={lunchOut ? null : (plan?.lunch_carb as { name: string } | null)}
+        veggie={lunchOut ? null : (plan?.lunch_veggie as { name: string } | null)}
+        sauce={lunchOut ? null : (plan?.lunch_sauce as { name: string } | null)}
+        skipped={lunchOut}
+        skipReason={lunchOut ? EATING_OUT_LABEL[plan!.eating_out] : undefined}
+      />
+
+      <MealBlock
+        label="Dinner"
+        method={dinnerOut ? null : (plan?.dinner_protein_method as { name: string; ingredient: { name: string } } | null)}
+        carb={dinnerOut ? null : (plan?.dinner_carb as { name: string } | null)}
+        veggie={dinnerOut ? null : (plan?.dinner_veggie as { name: string } | null)}
+        sauce={dinnerOut ? null : (plan?.dinner_sauce as { name: string } | null)}
+        skipped={dinnerOut}
+        skipReason={dinnerOut ? EATING_OUT_LABEL[plan!.eating_out] : undefined}
+      />
+
+      {plan?.snack_note && (
+        <div className="bg-white rounded-2xl p-4 shadow-sm mb-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Snack</p>
+          <p className="text-sm text-gray-700">{plan.snack_note}</p>
+        </div>
+      )}
+
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 mt-2">Daily check-in</p>
+      <JournalForm date={today} initial={journal} />
     </>
   )
 }
