@@ -3,7 +3,41 @@ export default function GuidePage() {
     <>
       <h1 className="text-lg font-bold text-gray-900 mb-4">Guide</h1>
 
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">The order — any restaurant</p>
+      {/* Meal timing — moved from old Food tab */}
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Meal timing</p>
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
+        {[
+          { badge: '45–60 min before gym', title: 'Banana + casein shake', desc: 'Never train fasted on Zepbound — glycogen is already lower from the deficit.' },
+          { badge: 'After gym', title: '3 eggs + oats · or Greek yogurt + oats', desc: '25–35g protein. Don\'t skip on rest days — one of 3–4 daily leucine windows.' },
+          { badge: 'Midday', title: 'Protein + rice or sweet potato + veg', desc: '30–40g protein. See Plan tab for this week\'s combinations.' },
+          { badge: 'Evening', title: 'Lean protein + carb + veg', desc: 'Low fat. Not spicy. Salmon always fresh — never batch. Stop at 70–80% full.' },
+          { badge: 'Before sleep', title: 'Cottage cheese (½ cup) or casein', desc: 'Slow-release protein feeds muscle repair overnight.' },
+        ].map((item, i, arr) => (
+          <div key={item.badge} className={`px-4 py-3 ${i < arr.length - 1 ? 'border-b border-gray-100' : ''}`}>
+            <p className="text-xs font-semibold text-emerald-600 mb-0.5">{item.badge}</p>
+            <p className="font-medium text-gray-900 text-sm">{item.title}</p>
+            <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Rules</p>
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
+        {[
+          { title: 'Stop at 70–80% full', desc: 'Zepbound slows digestion. Eating past this causes nausea and reflux.' },
+          { title: 'Protein every meal', desc: '25–35g per meal · ~150g total per day · this is what keeps the muscle.' },
+          { title: '3–4 meals a day, not 1–2', desc: 'Multiple leucine triggers per day for muscle protein synthesis.' },
+          { title: 'Eat slowly — 20+ min', desc: 'Fullness signals are delayed. Chew thoroughly.' },
+          { title: '16–20oz water on waking', desc: 'Before coffee, before food. Fixes water consistency.' },
+        ].map((rule, i, arr) => (
+          <div key={rule.title} className={`px-4 py-3 ${i < arr.length - 1 ? 'border-b border-gray-100' : ''}`}>
+            <p className="font-medium text-gray-900 text-sm">{rule.title}</p>
+            <p className="text-sm text-gray-500 mt-0.5">{rule.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Eating out</p>
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
         {[
           { num: '1', text: 'Grilled protein — chicken, fish, or lean beef', star: false },
