@@ -5,7 +5,6 @@ import { useState } from 'react'
 interface Props {
   date: string
   initial: {
-    protein_hit_g?: number | null
     energy_level?: number | null
     gi_okay?: boolean | null
     notes?: string | null
@@ -13,7 +12,6 @@ interface Props {
 }
 
 export default function JournalForm({ date, initial }: Props) {
-  const [proteinHit, setProteinHit] = useState(initial?.protein_hit_g?.toString() ?? '')
   const [energy, setEnergy] = useState(initial?.energy_level ?? 0)
   const [giOkay, setGiOkay] = useState<boolean | null>(initial?.gi_okay ?? null)
   const [notes, setNotes] = useState(initial?.notes ?? '')
@@ -26,7 +24,6 @@ export default function JournalForm({ date, initial }: Props) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        proteinHitG: proteinHit ? parseInt(proteinHit) : null,
         energyLevel: energy || null,
         giOkay,
         notes: notes || null,
@@ -39,19 +36,6 @@ export default function JournalForm({ date, initial }: Props) {
 
   return (
     <div className="bg-white rounded-2xl p-4 shadow-sm">
-      <div className="mb-4">
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
-          Protein hit (g)
-        </label>
-        <input
-          type="number"
-          value={proteinHit}
-          onChange={e => setProteinHit(e.target.value)}
-          placeholder="e.g. 148"
-          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-400"
-        />
-      </div>
-
       <div className="mb-4">
         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
           Energy level

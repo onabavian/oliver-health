@@ -1,6 +1,6 @@
 export type IngredientType = 'protein' | 'carb' | 'veggie' | 'dairy' | 'pantry'
 export type DayName = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun'
-export type EatingOut = 'normal' | 'work_lunch' | 'fast_casual' | 'date_restaurant'
+export type MealBypass = 'normal' | 'skipped' | 'eating_out' | 'date_night' | 'event'
 export type RecipeSource = 'manual' | 'ai_generated'
 export type UnitSystem = 'imperial' | 'metric'
 
@@ -57,7 +57,10 @@ export interface DayPlan {
   dayName: DayName
   isWorkoutDay: boolean
   needsPreworkout: boolean
-  eatingOut: EatingOut
+  lunchBypass: MealBypass
+  lunchBypassNote: string | null
+  dinnerBypass: MealBypass
+  dinnerBypassNote: string | null
   breakfastNote: string | null
   lunchProteinMethodId: string | null
   lunchCarbId: string | null
@@ -72,7 +75,6 @@ export interface DayPlan {
 
 export interface JournalEntry {
   date: string
-  proteinHitG: number | null
   energyLevel: number | null
   giOkay: boolean | null
   notes: string | null

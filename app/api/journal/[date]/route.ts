@@ -20,7 +20,6 @@ export async function PUT(req: Request, { params }: { params: { date: string } }
     .upsert(
       {
         date: params.date,
-        protein_hit_g: body.proteinHitG ?? null,
         energy_level: body.energyLevel ?? null,
         gi_okay: body.giOkay ?? null,
         notes: body.notes ?? null,

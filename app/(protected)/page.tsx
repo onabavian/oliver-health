@@ -36,20 +36,31 @@ async function getTodayJournal() {
   return data
 }
 
-function MealBlock({ label, method, carb, veggie, sauce, skipped, skipReason }: {
+const BYPASS_LABEL: Record<string, string> = {
+  skipped: 'Skipped',
+  eating_out: '🍽 Eating out',
+  date_night: '♥ Date night',
+  event: '📅 Event / less control',
+}
+
+function MealBlock({ label, method, carb, veggie, sauce, bypass, bypassNote }: {
   label: string
   method: { name: string; ingredient: { name: string } } | null
   carb: { name: string } | null
   veggie: { name: string } | null
   sauce: { name: string } | null
-  skipped?: boolean
-  skipReason?: string
+  bypass: string
+  bypassNote?: string | null
 }) {
+  const isSkipped = bypass !== 'normal'
   return (
     <div className="bg-white rounded-2xl p-4 shadow-sm mb-3">
       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{label}</p>
-      {skipped ? (
-        <p className="text-sm text-amber-600 font-medium">{skipReason}</p>
+      {isSkipped ? (
+        <div>
+          <p className="text-sm text-amber-600 font-medium">{BYPASS_LABEL[bypass] ?? bypass}</p>
+          {bypassNote && <p className="text-xs text-gray-400 mt-1">{bypassNote}</p>}
+        </div>
       ) : !method && !carb ? (
         <p className="text-sm text-gray-400 italic">Not planned — set in Plan tab</p>
       ) : (
@@ -68,19 +79,13 @@ function MealBlock({ label, method, carb, veggie, sauce, skipped, skipReason }: 
   )
 }
 
-const EATING_OUT_LABEL: Record<string, string> = {
-  work_lunch: '🍽 Work lunch today',
-  fast_casual: '🥡 Fast casual today',
-  date_restaurant: '♥ Date night tonight',
-}
-
 export default async function TodayPage() {
   const [plan, journal] = await Promise.all([getTodayPlan(), getTodayJournal()])
   const today = new Date().toISOString().slice(0, 10)
   const todayName = getTodayName()
 
-  const lunchOut = plan?.eating_out === 'work_lunch' || plan?.eating_out === 'fast_casual'
-  const dinnerOut = plan?.eating_out === 'date_restaurant'
+  const lunchBypass = (plan?.lunch_bypass as string) ?? 'normal'
+  const dinnerBypass = (plan?.dinner_bypass as string) ?? 'normal'
 
   return (
     <>
@@ -96,43 +101,37 @@ export default async function TodayPage() {
         </div>
       </div>
 
-      {plan?.eating_out && plan.eating_out !== 'normal' && (
-        <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5 mb-3 text-sm font-medium text-amber-800">
-          {EATING_OUT_LABEL[plan.eating_out]}
-        </div>
-      )}
-
       {plan?.breakfast_note && (
         <div className="bg-white rounded-2xl p-4 shadow-sm mb-3">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Breakfast</p>
-          <p className="text-sm text-gray-700">{plan.breakfast_note}</p>
+          <p className="text-sm text-gray-700">{plan.breakfast_note as string}</p>
         </div>
       )}
 
       <MealBlock
         label="Lunch"
-        method={lunchOut ? null : (plan?.lunch_protein_method as { name: string; ingredient: { name: string } } | null)}
-        carb={lunchOut ? null : (plan?.lunch_carb as { name: string } | null)}
-        veggie={lunchOut ? null : (plan?.lunch_veggie as { name: string } | null)}
-        sauce={lunchOut ? null : (plan?.lunch_sauce as { name: string } | null)}
-        skipped={lunchOut}
-        skipReason={lunchOut ? EATING_OUT_LABEL[plan!.eating_out] : undefined}
+        bypass={lunchBypass}
+        bypassNote={plan?.lunch_bypass_note as string | null}
+        method={lunchBypass !== 'normal' ? null : (plan?.lunch_protein_method as { name: string; ingredient: { name: string } } | null)}
+        carb={lunchBypass !== 'normal' ? null : (plan?.lunch_carb as { name: string } | null)}
+        veggie={lunchBypass !== 'normal' ? null : (plan?.lunch_veggie as { name: string } | null)}
+        sauce={lunchBypass !== 'normal' ? null : (plan?.lunch_sauce as { name: string } | null)}
       />
 
       <MealBlock
         label="Dinner"
-        method={dinnerOut ? null : (plan?.dinner_protein_method as { name: string; ingredient: { name: string } } | null)}
-        carb={dinnerOut ? null : (plan?.dinner_carb as { name: string } | null)}
-        veggie={dinnerOut ? null : (plan?.dinner_veggie as { name: string } | null)}
-        sauce={dinnerOut ? null : (plan?.dinner_sauce as { name: string } | null)}
-        skipped={dinnerOut}
-        skipReason={dinnerOut ? EATING_OUT_LABEL[plan!.eating_out] : undefined}
+        bypass={dinnerBypass}
+        bypassNote={plan?.dinner_bypass_note as string | null}
+        method={dinnerBypass !== 'normal' ? null : (plan?.dinner_protein_method as { name: string; ingredient: { name: string } } | null)}
+        carb={dinnerBypass !== 'normal' ? null : (plan?.dinner_carb as { name: string } | null)}
+        veggie={dinnerBypass !== 'normal' ? null : (plan?.dinner_veggie as { name: string } | null)}
+        sauce={dinnerBypass !== 'normal' ? null : (plan?.dinner_sauce as { name: string } | null)}
       />
 
       {plan?.snack_note && (
         <div className="bg-white rounded-2xl p-4 shadow-sm mb-3">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Snack</p>
-          <p className="text-sm text-gray-700">{plan.snack_note}</p>
+          <p className="text-sm text-gray-700">{plan.snack_note as string}</p>
         </div>
       )}
 

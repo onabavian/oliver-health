@@ -60,7 +60,11 @@ create table day_plan (
   day_name text not null check (day_name in ('Mon','Tue','Wed','Thu','Fri','Sat','Sun')),
   is_workout_day boolean not null default false,
   needs_preworkout boolean not null default false,
-  eating_out text not null default 'normal' check (eating_out in ('normal','work_lunch','fast_casual','date_restaurant')),
+  -- Per-meal bypass (replaces day-level eating_out)
+  lunch_bypass text not null default 'normal' check (lunch_bypass in ('normal','skipped','eating_out','date_night','event')),
+  lunch_bypass_note text,
+  dinner_bypass text not null default 'normal' check (dinner_bypass in ('normal','skipped','eating_out','date_night','event')),
+  dinner_bypass_note text,
   breakfast_note text,
   lunch_protein_method_id uuid references protein_methods(id),
   lunch_carb_id uuid references ingredients(id),
