@@ -143,24 +143,33 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
 
   async function saveBatch() {
     setBatchSaving(true)
-    await fetch('/api/plan/batch', {
+    const res = await fetch('/api/plan/batch', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...b, weekStart }),
     })
     setBatchSaving(false)
-    setBatchSaved(true)
-    setTimeout(() => setBatchSaved(false), 2000)
+    if (res.ok) {
+      setBatchSaved(true)
+      setTimeout(() => setBatchSaved(false), 2000)
+    } else {
+      const err = await res.json()
+      alert('Failed to save batch plan: ' + (err.error ?? res.status))
+    }
   }
 
   async function saveDay(day: DayName) {
     setDaySaving(s => ({ ...s, [day]: true }))
-    await fetch(`/api/plan/days/${day}`, {
+    const res = await fetch(`/api/plan/days/${day}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...dayStates[day], weekStart }),
     })
     setDaySaving(s => ({ ...s, [day]: false }))
+    if (!res.ok) {
+      const err = await res.json()
+      alert('Failed to save ' + day + ': ' + (err.error ?? res.status))
+    }
   }
 
   function setDay(day: DayName, patch: Partial<DayState>) {

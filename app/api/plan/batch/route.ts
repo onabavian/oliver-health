@@ -24,16 +24,16 @@ export async function PUT(req: Request) {
     .upsert(
       {
         week_start: weekStart,
-        protein1_id: body.protein1Id ?? null,
-        protein1_method_id: body.protein1MethodId ?? null,
-        protein2_id: body.protein2Id ?? null,
-        protein2_method_id: body.protein2MethodId ?? null,
-        carb1_id: body.carb1Id ?? null,
-        carb2_id: body.carb2Id ?? null,
-        veggie1_id: body.veggie1Id ?? null,
-        veggie2_id: body.veggie2Id ?? null,
-        sauce1_id: body.sauce1Id ?? null,
-        sauce2_id: body.sauce2Id ?? null,
+        protein1_id: body.protein1Id || null,
+        protein1_method_id: body.protein1MethodId || null,
+        protein2_id: body.protein2Id || null,
+        protein2_method_id: body.protein2MethodId || null,
+        carb1_id: body.carb1Id || null,
+        carb2_id: body.carb2Id || null,
+        veggie1_id: body.veggie1Id || null,
+        veggie2_id: body.veggie2Id || null,
+        sauce1_id: body.sauce1Id || null,
+        sauce2_id: body.sauce2Id || null,
       },
       { onConflict: 'week_start' }
     )
