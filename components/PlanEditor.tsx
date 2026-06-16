@@ -8,7 +8,7 @@ const DEFAULT_TRAIN = new Set<DayName>(['Mon', 'Tue', 'Thu', 'Fri'])
 
 const BYPASS_OPTIONS = [
   { value: 'normal', label: 'Normal' },
-  { value: 'skipped', label: 'Skipped' },
+  { value: 'skipped', label: '⭕ Skipped' },
   { value: 'eating_out', label: '🍽 Eating out' },
   { value: 'date_night', label: '♥ Date night' },
   { value: 'event', label: '📅 Event' },
@@ -85,10 +85,28 @@ function MealSlot({ label, value, onChange, options }: {
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="w-full border border-gray-100 bg-gray-50 rounded-lg px-2 py-2 text-xs"
+      className="w-full border border-gray-200 bg-white rounded-xl px-3 py-2.5 text-sm text-gray-700"
     >
       <option value="">{label}…</option>
       {options.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
+    </select>
+  )
+}
+
+function BypassSelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <select
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      className={`text-xs font-semibold border rounded-lg px-2 py-1 ${
+        value === 'normal'
+          ? 'border-gray-200 bg-gray-50 text-gray-500'
+          : 'border-amber-200 bg-amber-50 text-amber-700'
+      }`}
+    >
+      {BYPASS_OPTIONS.map(o => (
+        <option key={o.value} value={o.value}>{o.label}</option>
+      ))}
     </select>
   )
 }
@@ -412,24 +430,12 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
 
             {/* Lunch */}
             <div className="mb-3">
-              <p className="text-xs font-semibold text-gray-400 mb-1.5">Lunch</p>
-              <div className="flex gap-1 overflow-x-auto pb-1 mb-2">
-                {BYPASS_OPTIONS.map(o => (
-                  <button
-                    key={o.value}
-                    onClick={() => setDay(day, { lunchBypass: o.value })}
-                    className={`flex-shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full transition-colors ${
-                      d.lunchBypass === o.value
-                        ? o.value === 'normal' ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white'
-                        : 'bg-gray-100 text-gray-500'
-                    }`}
-                  >
-                    {o.label}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Lunch</p>
+                <BypassSelect value={d.lunchBypass} onChange={v => setDay(day, { lunchBypass: v })} />
               </div>
               {d.lunchBypass === 'normal' ? (
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-2 gap-2">
                   <MealSlot label="Protein" value={d.lunchProteinMethodId} onChange={v => setDay(day, { lunchProteinMethodId: v })} options={batchMethodOpts.map(m => ({ id: m.id, label: `${m.ingredient.name} ${m.name}` }))} />
                   <MealSlot label="Carb" value={d.lunchCarbId} onChange={v => setDay(day, { lunchCarbId: v })} options={batchCarbOpts.map(c => ({ id: c.id, label: c.name }))} />
                   <MealSlot label="Veggie" value={d.lunchVeggieId} onChange={v => setDay(day, { lunchVeggieId: v })} options={batchVeggieOpts.map(v => ({ id: v.id, label: v.name }))} />
@@ -440,31 +446,19 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
                   value={d.lunchBypassNote}
                   onChange={e => setDay(day, { lunchBypassNote: e.target.value })}
                   placeholder="Note (e.g. Sweetgreen salad)"
-                  className="w-full border border-gray-100 bg-gray-50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-300"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-300"
                 />
               )}
             </div>
 
             {/* Dinner */}
             <div className="mb-3">
-              <p className="text-xs font-semibold text-gray-400 mb-1.5">Dinner</p>
-              <div className="flex gap-1 overflow-x-auto pb-1 mb-2">
-                {BYPASS_OPTIONS.map(o => (
-                  <button
-                    key={o.value}
-                    onClick={() => setDay(day, { dinnerBypass: o.value })}
-                    className={`flex-shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full transition-colors ${
-                      d.dinnerBypass === o.value
-                        ? o.value === 'normal' ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white'
-                        : 'bg-gray-100 text-gray-500'
-                    }`}
-                  >
-                    {o.label}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dinner</p>
+                <BypassSelect value={d.dinnerBypass} onChange={v => setDay(day, { dinnerBypass: v })} />
               </div>
               {d.dinnerBypass === 'normal' ? (
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-2 gap-2">
                   <MealSlot label="Protein" value={d.dinnerProteinMethodId} onChange={v => setDay(day, { dinnerProteinMethodId: v })} options={dinnerMethodOpts.map(m => ({ id: m.id, label: `${m.ingredient.name} ${m.name}` }))} />
                   <MealSlot label="Carb" value={d.dinnerCarbId} onChange={v => setDay(day, { dinnerCarbId: v })} options={batchCarbOpts.map(c => ({ id: c.id, label: c.name }))} />
                   <MealSlot label="Veggie" value={d.dinnerVeggieId} onChange={v => setDay(day, { dinnerVeggieId: v })} options={batchVeggieOpts.map(v => ({ id: v.id, label: v.name }))} />
@@ -475,7 +469,7 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
                   value={d.dinnerBypassNote}
                   onChange={e => setDay(day, { dinnerBypassNote: e.target.value })}
                   placeholder="Note (e.g. Nobu dinner)"
-                  className="w-full border border-gray-100 bg-gray-50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-300"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-300"
                 />
               )}
             </div>
