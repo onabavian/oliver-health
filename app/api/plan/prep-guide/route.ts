@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -15,6 +16,9 @@ Return ONLY valid JSON — no markdown:
 }`
 
 export async function POST(req: Request) {
+  const session = await auth()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const { batch } = await req.json()
 
   const items = [

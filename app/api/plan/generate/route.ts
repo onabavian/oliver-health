@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase'
+import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -49,6 +50,9 @@ interface AiDayPlan {
 }
 
 export async function POST(req: Request) {
+  const session = await auth()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const { weekStart, batch, days } = await req.json() as {
     weekStart: string
     batch: Record<string, BatchItem | null>
