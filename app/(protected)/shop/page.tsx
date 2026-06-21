@@ -14,33 +14,30 @@ async function getGroceryData() {
   const sb = createServiceClient()
   const weekStart = getWeekStart()
 
-  const [{ data: days }, { data: batch }] = await Promise.all([
-    sb.from('day_plan').select(`
+  const [{ data: days }, { data: batch }, { data: allIngredients }] = await Promise.all([
+    sb.from('day_plan').select('*').eq('week_start', weekStart),
+    sb.from('week_batch').select(`
       *,
-      lunch_protein_method:protein_methods!lunch_protein_method_id(ingredient:ingredients(*)),
-      lunch_carb:ingredients!lunch_carb_id(*),
-      lunch_veggie:ingredients!lunch_veggie_id(*),
-      dinner_protein_method:protein_methods!dinner_protein_method_id(ingredient:ingredients(*)),
-      dinner_carb:ingredients!dinner_carb_id(*),
-      dinner_veggie:ingredients!dinner_veggie_id(*)
-    `).eq('week_start', weekStart),
-    sb.from('week_batch')
-      .select('sauce1:sauces!sauce1_id(name), sauce2:sauces!sauce2_id(name)')
-      .eq('week_start', weekStart)
-      .maybeSingle(),
+      protein1:ingredients!protein1_id(*),
+      protein2:ingredients!protein2_id(*),
+      carb1:ingredients!carb1_id(*),
+      carb2:ingredients!carb2_id(*),
+      veggie1:ingredients!veggie1_id(*),
+      veggie2:ingredients!veggie2_id(*),
+      sauce1:sauces!sauce1_id(name),
+      sauce2:sauces!sauce2_id(name)
+    `).eq('week_start', weekStart).maybeSingle(),
+    sb.from('ingredients').select('*').order('sort_order'),
   ])
 
-  return { days: days ?? [], batch }
+  return { days: days ?? [], batch, allIngredients: allIngredients ?? [] }
 }
 
 function addIngredient(map: Map<string, IngCount>, ing: Record<string, unknown> | null) {
   if (!ing || !ing.id) return
   const key = String(ing.id)
   const existing = map.get(key)
-  if (existing) {
-    existing.servings++
-    return
-  }
+  if (existing) { existing.servings++; return }
   map.set(key, {
     name: String(ing.name ?? ''),
     groceryLabel: String(ing.grocery_label ?? ing.name ?? ''),
@@ -52,36 +49,60 @@ function addIngredient(map: Map<string, IngCount>, ing: Record<string, unknown> 
 }
 
 export default async function ShopPage() {
-  const { days, batch } = await getGroceryData()
+  const { days, batch, allIngredients } = await getGroceryData()
 
+  const b = batch as Record<string, unknown> | null
   const ingMap = new Map<string, IngCount>()
+  const ingById = Object.fromEntries((allIngredients as Record<string, unknown>[]).map(i => [String(i.id), i]))
+
+  let breakfastCount = 0
   let lunchCount = 0
   let dinnerCount = 0
+  let snackCount = 0
 
   for (const day of days) {
     const d = day as Record<string, unknown>
-    const lunchOut = d.eating_out === 'work_lunch' || d.eating_out === 'fast_casual'
-    const dinnerOut = d.eating_out === 'date_restaurant'
 
-    if (!lunchOut) {
-      const lpm = d.lunch_protein_method as Record<string, unknown> | null
-      if (lpm?.ingredient) { addIngredient(ingMap, lpm.ingredient as Record<string, unknown>); lunchCount++ }
-      addIngredient(ingMap, d.lunch_carb as Record<string, unknown> | null)
-      addIngredient(ingMap, d.lunch_veggie as Record<string, unknown> | null)
+    // Breakfast
+    if (d.breakfast_bypass === 'normal' && b) {
+      const ids = Array.isArray(b.breakfast_item_ids) ? b.breakfast_item_ids as string[] : []
+      if (ids.length > 0) {
+        ids.forEach(id => addIngredient(ingMap, ingById[id] as Record<string, unknown>))
+        breakfastCount++
+      }
     }
 
-    if (!dinnerOut) {
-      const dpm = d.dinner_protein_method as Record<string, unknown> | null
-      if (dpm?.ingredient) { addIngredient(ingMap, dpm.ingredient as Record<string, unknown>); dinnerCount++ }
-      addIngredient(ingMap, d.dinner_carb as Record<string, unknown> | null)
-      addIngredient(ingMap, d.dinner_veggie as Record<string, unknown> | null)
+    // Lunch
+    if (d.lunch_bypass === 'normal' && b) {
+      const items = [b.protein1, b.protein2, b.carb1, b.carb2, b.veggie1, b.veggie2].filter(Boolean)
+      if (items.length > 0) {
+        items.forEach(ing => addIngredient(ingMap, ing as Record<string, unknown>))
+        lunchCount++
+      }
+    }
+
+    // Dinner
+    if (d.dinner_bypass === 'normal' && b) {
+      const items = [b.protein1, b.protein2, b.carb1, b.carb2, b.veggie1, b.veggie2].filter(Boolean)
+      if (items.length > 0) {
+        items.forEach(ing => addIngredient(ingMap, ing as Record<string, unknown>))
+        dinnerCount++
+      }
+    }
+
+    // Snack
+    if (d.snack_bypass === 'normal' && b) {
+      const ids = Array.isArray(b.snack_item_ids) ? b.snack_item_ids as string[] : []
+      if (ids.length > 0) {
+        ids.forEach(id => addIngredient(ingMap, ingById[id] as Record<string, unknown>))
+        snackCount++
+      }
     }
   }
 
   const allIngs = Array.from(ingMap.values())
   const totalMeals = lunchCount + dinnerCount
-
-  const hasSauces = batch && ((batch as Record<string, unknown>).sauce1 || (batch as Record<string, unknown>).sauce2)
+  const hasSauces = b?.sauce1 || b?.sauce2
 
   return (
     <>
@@ -89,17 +110,17 @@ export default async function ShopPage() {
 
       <div className="bg-blue-50 rounded-xl px-4 py-3 mb-4">
         <p className="text-sm font-semibold text-blue-800">
-          Covering {totalMeals} planned meals
+          Covering {breakfastCount + totalMeals + snackCount} meal instances this week
         </p>
         <p className="text-xs text-blue-600 mt-0.5">
-          {lunchCount} lunches + {dinnerCount} dinners
+          {breakfastCount}B · {lunchCount}L · {dinnerCount}D · {snackCount}S
         </p>
       </div>
 
-      {totalMeals === 0 ? (
+      {allIngs.length === 0 ? (
         <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
           <p className="font-semibold text-gray-900 mb-1">No meals planned yet</p>
-          <p className="text-sm text-gray-500">Set your week plan first — this list generates automatically from your planned meals.</p>
+          <p className="text-sm text-gray-500">Set your batch plan and mark days in the Plan tab — this list generates automatically.</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
@@ -111,15 +132,11 @@ export default async function ShopPage() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-medium text-gray-900 text-sm">{ing.groceryLabel}</p>
-                  {ing.notes && (
-                    <p className="text-xs text-gray-400 mt-0.5">{ing.notes}</p>
-                  )}
+                  {ing.notes && <p className="text-xs text-gray-400 mt-0.5">{ing.notes}</p>}
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-sm font-bold text-emerald-700">×{ing.servings}</p>
-                  {ing.defaultQtyImperial && (
-                    <p className="text-xs text-gray-400">{ing.defaultQtyImperial} ea.</p>
-                  )}
+                  {ing.defaultQtyImperial && <p className="text-xs text-gray-400">{ing.defaultQtyImperial} ea.</p>}
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-export type IngredientType = 'protein' | 'carb' | 'veggie' | 'dairy' | 'pantry'
+export type IngredientType = 'protein' | 'carb' | 'veggie' | 'dairy' | 'pantry' | 'breakfast' | 'snack'
 export type DayName = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun'
 export type MealBypass = 'normal' | 'skipped' | 'eating_out' | 'date_night' | 'event'
 export type RecipeSource = 'manual' | 'ai_generated'
@@ -40,6 +40,7 @@ export interface Sauce {
 
 export interface WeekBatch {
   weekStart: string
+  name: string | null
   protein1Id: string | null
   protein1MethodId: string | null
   protein2Id: string | null
@@ -50,6 +51,8 @@ export interface WeekBatch {
   veggie2Id: string | null
   sauce1Id: string | null
   sauce2Id: string | null
+  breakfastItemIds: string[]
+  snackItemIds: string[]
 }
 
 export interface DayPlan {
@@ -57,20 +60,12 @@ export interface DayPlan {
   dayName: DayName
   isWorkoutDay: boolean
   needsPreworkout: boolean
+  breakfastBypass: MealBypass
   lunchBypass: MealBypass
   lunchBypassNote: string | null
   dinnerBypass: MealBypass
   dinnerBypassNote: string | null
-  breakfastNote: string | null
-  lunchProteinMethodId: string | null
-  lunchCarbId: string | null
-  lunchVeggieId: string | null
-  lunchSauceId: string | null
-  dinnerProteinMethodId: string | null
-  dinnerCarbId: string | null
-  dinnerVeggieId: string | null
-  dinnerSauceId: string | null
-  snackNote: string | null
+  snackBypass: MealBypass
 }
 
 export interface JournalEntry {
@@ -80,10 +75,18 @@ export interface JournalEntry {
   notes: string | null
 }
 
-export interface ResolvedMeal {
-  proteinMethod: ProteinMethod | null
-  carb: Ingredient | null
-  veggie: Ingredient | null
-  sauce: Sauce | null
-  estimatedProteinG: number
+export interface SavedBatch {
+  id: string
+  weekStart: string
+  name: string
+  protein1?: { name: string } | null
+  protein2?: { name: string } | null
+  carb1?: { name: string } | null
+  carb2?: { name: string } | null
+  veggie1?: { name: string } | null
+  veggie2?: { name: string } | null
+  sauce1?: { name: string } | null
+  sauce2?: { name: string } | null
+  breakfastItemIds: string[]
+  snackItemIds: string[]
 }

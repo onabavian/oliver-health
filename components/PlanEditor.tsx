@@ -17,40 +17,24 @@ const BYPASS_OPTIONS = [
 interface DayState {
   isWorkoutDay: boolean
   needsPreworkout: boolean
-  breakfastNote: string
+  breakfastBypass: string
   lunchBypass: string
   lunchBypassNote: string
-  lunchProteinMethodId: string
-  lunchCarbId: string
-  lunchVeggieId: string
-  lunchSauceId: string
   dinnerBypass: string
   dinnerBypassNote: string
-  dinnerProteinMethodId: string
-  dinnerCarbId: string
-  dinnerVeggieId: string
-  dinnerSauceId: string
-  snackNote: string
+  snackBypass: string
 }
 
 function emptyDay(day: DayName): DayState {
   return {
     isWorkoutDay: DEFAULT_TRAIN.has(day),
     needsPreworkout: DEFAULT_TRAIN.has(day),
-    breakfastNote: '',
+    breakfastBypass: 'normal',
     lunchBypass: 'normal',
     lunchBypassNote: '',
-    lunchProteinMethodId: '',
-    lunchCarbId: '',
-    lunchVeggieId: '',
-    lunchSauceId: '',
     dinnerBypass: 'normal',
     dinnerBypassNote: '',
-    dinnerProteinMethodId: '',
-    dinnerCarbId: '',
-    dinnerVeggieId: '',
-    dinnerSauceId: '',
-    snackNote: '',
+    snackBypass: 'normal',
   }
 }
 
@@ -72,24 +56,6 @@ function Picker({ label, value, onChange, options }: {
         {options.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
       </select>
     </div>
-  )
-}
-
-function MealSlot({ label, value, onChange, options }: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  options: { id: string; label: string }[]
-}) {
-  return (
-    <select
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      className="w-full border border-gray-200 bg-white rounded-xl px-3 py-2.5 text-sm text-gray-700"
-    >
-      <option value="">{label}…</option>
-      {options.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
-    </select>
   )
 }
 
@@ -118,31 +84,39 @@ interface PrepStep {
   note?: string
 }
 
-export default function PlanEditor({ batch, days, proteins, methods, carbs, veggies, sauces, weekStart }: {
-  batch: Record<string, string | null> | null
+export default function PlanEditor({ batch, days, proteins, methods, carbs, veggies, sauces, breakfastItems, snackItems, weekStart }: {
+  batch: Record<string, unknown> | null
   days: Record<string, unknown>[]
   proteins: Ingredient[]
   methods: (ProteinMethod & { ingredient: Ingredient })[]
   carbs: Ingredient[]
   veggies: Ingredient[]
   sauces: Sauce[]
+  breakfastItems: Ingredient[]
+  snackItems: Ingredient[]
   weekStart: string
 }) {
+  const existingBreakfastIds: string[] = Array.isArray(batch?.breakfast_item_ids) ? batch.breakfast_item_ids as string[] : []
+  const existingSnackIds: string[] = Array.isArray(batch?.snack_item_ids) ? batch.snack_item_ids as string[] : []
+
   const [b, setB] = useState({
-    protein1Id: batch?.protein1_id ?? '',
-    protein1MethodId: batch?.protein1_method_id ?? '',
-    protein2Id: batch?.protein2_id ?? '',
-    protein2MethodId: batch?.protein2_method_id ?? '',
-    carb1Id: batch?.carb1_id ?? '',
-    carb2Id: batch?.carb2_id ?? '',
-    veggie1Id: batch?.veggie1_id ?? '',
-    veggie2Id: batch?.veggie2_id ?? '',
-    sauce1Id: batch?.sauce1_id ?? '',
-    sauce2Id: batch?.sauce2_id ?? '',
+    protein1Id: String(batch?.protein1_id ?? ''),
+    protein1MethodId: String(batch?.protein1_method_id ?? ''),
+    protein2Id: String(batch?.protein2_id ?? ''),
+    protein2MethodId: String(batch?.protein2_method_id ?? ''),
+    carb1Id: String(batch?.carb1_id ?? ''),
+    carb2Id: String(batch?.carb2_id ?? ''),
+    veggie1Id: String(batch?.veggie1_id ?? ''),
+    veggie2Id: String(batch?.veggie2_id ?? ''),
+    sauce1Id: String(batch?.sauce1_id ?? ''),
+    sauce2Id: String(batch?.sauce2_id ?? ''),
+    breakfastItemIds: existingBreakfastIds,
+    snackItemIds: existingSnackIds,
   })
   const [batchSaved, setBatchSaved] = useState(false)
   const [batchSaving, setBatchSaving] = useState(false)
-  const [generating, setGenerating] = useState(false)
+  const [recipeName, setRecipeName] = useState('')
+  const [showRecipeInput, setShowRecipeInput] = useState(false)
   const [prepGuideLoading, setPrepGuideLoading] = useState(false)
   const [prepGuide, setPrepGuide] = useState<{ steps: PrepStep[]; totalActiveTime: string } | null>(null)
 
@@ -153,20 +127,12 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
       init[d] = ex ? {
         isWorkoutDay: Boolean(ex.is_workout_day),
         needsPreworkout: Boolean(ex.needs_preworkout),
-        breakfastNote: String(ex.breakfast_note ?? ''),
+        breakfastBypass: String(ex.breakfast_bypass ?? 'normal'),
         lunchBypass: String(ex.lunch_bypass ?? 'normal'),
         lunchBypassNote: String(ex.lunch_bypass_note ?? ''),
-        lunchProteinMethodId: String(ex.lunch_protein_method_id ?? ''),
-        lunchCarbId: String(ex.lunch_carb_id ?? ''),
-        lunchVeggieId: String(ex.lunch_veggie_id ?? ''),
-        lunchSauceId: String(ex.lunch_sauce_id ?? ''),
         dinnerBypass: String(ex.dinner_bypass ?? 'normal'),
         dinnerBypassNote: String(ex.dinner_bypass_note ?? ''),
-        dinnerProteinMethodId: String(ex.dinner_protein_method_id ?? ''),
-        dinnerCarbId: String(ex.dinner_carb_id ?? ''),
-        dinnerVeggieId: String(ex.dinner_veggie_id ?? ''),
-        dinnerSauceId: String(ex.dinner_sauce_id ?? ''),
-        snackNote: String(ex.snack_note ?? ''),
+        snackBypass: String(ex.snack_bypass ?? 'normal'),
       } : emptyDay(d)
     })
     return init
@@ -177,6 +143,10 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
     return methods
       .filter(m => m.ingredient?.id === proteinId)
       .map(m => ({ id: m.id, label: m.name }))
+  }
+
+  function toggleItemId(ids: string[], id: string): string[] {
+    return ids.includes(id) ? ids.filter(x => x !== id) : [...ids, id]
   }
 
   function buildBatchContext() {
@@ -196,12 +166,12 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
     }
   }
 
-  async function saveBatch() {
+  async function saveBatch(name?: string) {
     setBatchSaving(true)
     const res = await fetch('/api/plan/batch', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...b, weekStart }),
+      body: JSON.stringify({ ...b, weekStart, name: name ?? null }),
     })
     setBatchSaving(false)
     if (res.ok) {
@@ -209,50 +179,15 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
       setTimeout(() => setBatchSaved(false), 2000)
     } else {
       const err = await res.json()
-      alert('Failed to save batch plan: ' + (err.error ?? res.status))
+      alert('Failed to save: ' + (err.error ?? res.status))
     }
   }
 
-  async function generateWeekPlan() {
-    setGenerating(true)
-    const batchCtx = buildBatchContext()
-    const daysCtx = DAYS.map(day => ({
-      day,
-      lunchBypass: dayStates[day].lunchBypass,
-      dinnerBypass: dayStates[day].dinnerBypass,
-    }))
-    const res = await fetch('/api/plan/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ weekStart, batch: batchCtx, days: daysCtx }),
-    })
-    setGenerating(false)
-    if (!res.ok) {
-      const err = await res.json()
-      alert('Generation failed: ' + (err.error ?? res.status))
-      return
-    }
-    const saved: Record<string, unknown>[] = await res.json()
-    // Update day states with AI-generated assignments
-    setDayStates(prev => {
-      const next = { ...prev }
-      for (const record of saved) {
-        const day = record.day_name as DayName
-        if (!day) continue
-        next[day] = {
-          ...next[day],
-          lunchProteinMethodId: String(record.lunch_protein_method_id ?? ''),
-          lunchCarbId: String(record.lunch_carb_id ?? ''),
-          lunchVeggieId: String(record.lunch_veggie_id ?? ''),
-          lunchSauceId: String(record.lunch_sauce_id ?? ''),
-          dinnerProteinMethodId: String(record.dinner_protein_method_id ?? ''),
-          dinnerCarbId: String(record.dinner_carb_id ?? ''),
-          dinnerVeggieId: String(record.dinner_veggie_id ?? ''),
-          dinnerSauceId: String(record.dinner_sauce_id ?? ''),
-        }
-      }
-      return next
-    })
+  async function saveAsRecipe() {
+    if (!recipeName.trim()) return
+    await saveBatch(recipeName.trim())
+    setRecipeName('')
+    setShowRecipeInput(false)
   }
 
   async function generatePrepGuide() {
@@ -263,10 +198,7 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
       body: JSON.stringify({ batch: buildBatchContext() }),
     })
     setPrepGuideLoading(false)
-    if (res.ok) {
-      const data = await res.json()
-      setPrepGuide(data)
-    }
+    if (res.ok) setPrepGuide(await res.json())
   }
 
   async function saveDay(day: DayName) {
@@ -286,32 +218,6 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
   function setDay(day: DayName, patch: Partial<DayState>) {
     setDayStates(s => ({ ...s, [day]: { ...s[day], ...patch } }))
   }
-
-  const batchMethodOpts = [b.protein1MethodId, b.protein2MethodId]
-    .filter(Boolean)
-    .map(id => methods.find(m => m.id === id))
-    .filter(Boolean) as (ProteinMethod & { ingredient: Ingredient })[]
-
-  const batchCarbOpts = [b.carb1Id, b.carb2Id]
-    .filter(Boolean)
-    .map(id => carbs.find(c => c.id === id))
-    .filter(Boolean) as Ingredient[]
-
-  const batchVeggieOpts = [b.veggie1Id, b.veggie2Id]
-    .filter(Boolean)
-    .map(id => veggies.find(v => v.id === id))
-    .filter(Boolean) as Ingredient[]
-
-  const batchSauceOpts = [b.sauce1Id, b.sauce2Id]
-    .filter(Boolean)
-    .map(id => sauces.find(s => s.id === id))
-    .filter(Boolean) as Sauce[]
-
-  const salmonMethods = methods.filter(m => m.ingredient.name === 'Salmon')
-  const dinnerMethodOpts = [
-    ...batchMethodOpts,
-    ...salmonMethods.filter(s => !batchMethodOpts.find(bm => bm.id === s.id)),
-  ]
 
   const batchIsSet = !!(b.protein1MethodId || b.protein2MethodId)
 
@@ -334,31 +240,89 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
           <Picker label="Sauce 1" value={b.sauce1Id} onChange={v => setB(p => ({ ...p, sauce1Id: v }))} options={sauces.map(s => ({ id: s.id, label: s.name }))} />
           <Picker label="Sauce 2" value={b.sauce2Id} onChange={v => setB(p => ({ ...p, sauce2Id: v }))} options={sauces.map(s => ({ id: s.id, label: s.name }))} />
         </div>
+
+        {/* Breakfast items */}
+        {breakfastItems.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Breakfast items</p>
+            <div className="flex flex-wrap gap-2">
+              {breakfastItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setB(p => ({ ...p, breakfastItemIds: toggleItemId(p.breakfastItemIds, item.id) }))}
+                  className={`text-sm px-3 py-1.5 rounded-full font-medium transition-colors ${
+                    b.breakfastItemIds.includes(item.id)
+                      ? 'bg-orange-100 text-orange-800 border border-orange-200'
+                      : 'bg-gray-100 text-gray-500 border border-transparent'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Snack items */}
+        {snackItems.length > 0 && (
+          <div className="mb-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Snack items</p>
+            <div className="flex flex-wrap gap-2">
+              {snackItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setB(p => ({ ...p, snackItemIds: toggleItemId(p.snackItemIds, item.id) }))}
+                  className={`text-sm px-3 py-1.5 rounded-full font-medium transition-colors ${
+                    b.snackItemIds.includes(item.id)
+                      ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                      : 'bg-gray-100 text-gray-500 border border-transparent'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <button
-          onClick={saveBatch}
+          onClick={() => saveBatch()}
           disabled={batchSaving}
-          className="w-full bg-emerald-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50"
+          className="w-full bg-emerald-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50 mb-2"
         >
           {batchSaving ? 'Saving…' : batchSaved ? 'Saved ✓' : 'Save batch plan'}
         </button>
+
+        {/* Save as recipe */}
+        {showRecipeInput ? (
+          <div className="flex gap-2">
+            <input
+              value={recipeName}
+              onChange={e => setRecipeName(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && saveAsRecipe()}
+              placeholder="Recipe name (e.g. Chicken + Sweet Potato Week)"
+              autoFocus
+              className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400"
+            />
+            <button onClick={saveAsRecipe} disabled={!recipeName.trim()} className="bg-gray-900 text-white rounded-xl px-4 py-2 text-sm font-semibold disabled:opacity-40">Save</button>
+            <button onClick={() => { setShowRecipeInput(false); setRecipeName('') }} className="text-gray-400 px-2 text-sm">✕</button>
+          </div>
+        ) : (
+          <button onClick={() => setShowRecipeInput(true)} className="w-full text-gray-500 text-xs font-semibold py-1.5 hover:text-gray-700 transition-colors">
+            💾 Save as recipe
+          </button>
+        )}
       </div>
 
-      {/* AI actions */}
+      {/* Prep guide button */}
       {batchIsSet && (
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={generateWeekPlan}
-            disabled={generating}
-            className="flex-1 bg-purple-600 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50"
-          >
-            {generating ? 'Generating…' : '✨ Generate week plan'}
-          </button>
+        <div className="mb-4">
           <button
             onClick={generatePrepGuide}
             disabled={prepGuideLoading}
-            className="flex-1 bg-gray-800 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50"
+            className="w-full bg-gray-800 text-white rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50"
           >
-            {prepGuideLoading ? 'Loading…' : '📋 Prep guide'}
+            {prepGuideLoading ? 'Loading…' : '📋 Generate prep guide'}
           </button>
         </div>
       )}
@@ -421,66 +385,44 @@ export default function PlanEditor({ batch, days, proteins, methods, carbs, vegg
             </div>
 
             {/* Breakfast */}
-            <input
-              value={d.breakfastNote}
-              onChange={e => setDay(day, { breakfastNote: e.target.value })}
-              placeholder="Breakfast (e.g. 3 eggs + oats)"
-              className="w-full border border-gray-100 bg-gray-50 rounded-xl px-3 py-2 text-sm mb-3 focus:outline-none focus:border-emerald-300"
-            />
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Breakfast</p>
+              <BypassSelect value={d.breakfastBypass} onChange={v => setDay(day, { breakfastBypass: v })} />
+            </div>
 
             {/* Lunch */}
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Lunch</p>
-                <BypassSelect value={d.lunchBypass} onChange={v => setDay(day, { lunchBypass: v })} />
-              </div>
-              {d.lunchBypass === 'normal' ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <MealSlot label="Protein" value={d.lunchProteinMethodId} onChange={v => setDay(day, { lunchProteinMethodId: v })} options={batchMethodOpts.map(m => ({ id: m.id, label: `${m.ingredient.name} ${m.name}` }))} />
-                  <MealSlot label="Carb" value={d.lunchCarbId} onChange={v => setDay(day, { lunchCarbId: v })} options={batchCarbOpts.map(c => ({ id: c.id, label: c.name }))} />
-                  <MealSlot label="Veggie" value={d.lunchVeggieId} onChange={v => setDay(day, { lunchVeggieId: v })} options={batchVeggieOpts.map(v => ({ id: v.id, label: v.name }))} />
-                  <MealSlot label="Sauce" value={d.lunchSauceId} onChange={v => setDay(day, { lunchSauceId: v })} options={batchSauceOpts.map(s => ({ id: s.id, label: s.name }))} />
-                </div>
-              ) : (
-                <input
-                  value={d.lunchBypassNote}
-                  onChange={e => setDay(day, { lunchBypassNote: e.target.value })}
-                  placeholder="Note (e.g. Sweetgreen salad)"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-300"
-                />
-              )}
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Lunch</p>
+              <BypassSelect value={d.lunchBypass} onChange={v => setDay(day, { lunchBypass: v })} />
             </div>
+            {d.lunchBypass !== 'normal' && (
+              <input
+                value={d.lunchBypassNote}
+                onChange={e => setDay(day, { lunchBypassNote: e.target.value })}
+                placeholder="Note (e.g. Sweetgreen salad)"
+                className="w-full border border-gray-100 bg-gray-50 rounded-xl px-3 py-2 text-sm mb-2 focus:outline-none focus:border-emerald-300"
+              />
+            )}
 
             {/* Dinner */}
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dinner</p>
-                <BypassSelect value={d.dinnerBypass} onChange={v => setDay(day, { dinnerBypass: v })} />
-              </div>
-              {d.dinnerBypass === 'normal' ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <MealSlot label="Protein" value={d.dinnerProteinMethodId} onChange={v => setDay(day, { dinnerProteinMethodId: v })} options={dinnerMethodOpts.map(m => ({ id: m.id, label: `${m.ingredient.name} ${m.name}` }))} />
-                  <MealSlot label="Carb" value={d.dinnerCarbId} onChange={v => setDay(day, { dinnerCarbId: v })} options={batchCarbOpts.map(c => ({ id: c.id, label: c.name }))} />
-                  <MealSlot label="Veggie" value={d.dinnerVeggieId} onChange={v => setDay(day, { dinnerVeggieId: v })} options={batchVeggieOpts.map(v => ({ id: v.id, label: v.name }))} />
-                  <MealSlot label="Sauce" value={d.dinnerSauceId} onChange={v => setDay(day, { dinnerSauceId: v })} options={batchSauceOpts.map(s => ({ id: s.id, label: s.name }))} />
-                </div>
-              ) : (
-                <input
-                  value={d.dinnerBypassNote}
-                  onChange={e => setDay(day, { dinnerBypassNote: e.target.value })}
-                  placeholder="Note (e.g. Nobu dinner)"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-300"
-                />
-              )}
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dinner</p>
+              <BypassSelect value={d.dinnerBypass} onChange={v => setDay(day, { dinnerBypass: v })} />
             </div>
+            {d.dinnerBypass !== 'normal' && (
+              <input
+                value={d.dinnerBypassNote}
+                onChange={e => setDay(day, { dinnerBypassNote: e.target.value })}
+                placeholder="Note (e.g. Nobu dinner)"
+                className="w-full border border-gray-100 bg-gray-50 rounded-xl px-3 py-2 text-sm mb-2 focus:outline-none focus:border-emerald-300"
+              />
+            )}
 
             {/* Snack */}
-            <input
-              value={d.snackNote}
-              onChange={e => setDay(day, { snackNote: e.target.value })}
-              placeholder="Snack (e.g. yogurt + hard-boiled egg)"
-              className="w-full border border-gray-100 bg-gray-50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-300"
-            />
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Snack</p>
+              <BypassSelect value={d.snackBypass} onChange={v => setDay(day, { snackBypass: v })} />
+            </div>
           </div>
         )
       })}

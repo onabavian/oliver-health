@@ -9,7 +9,7 @@ drop table if exists day_status cascade;
 create table ingredients (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  type text not null check (type in ('protein','carb','veggie','dairy','pantry')),
+  type text not null check (type in ('protein','carb','veggie','dairy','pantry','breakfast','snack')),
   default_qty_g integer,
   default_qty_imperial text,
   grocery_label text not null,
@@ -50,7 +50,10 @@ create table week_batch (
   veggie1_id uuid references ingredients(id),
   veggie2_id uuid references ingredients(id),
   sauce1_id uuid references sauces(id),
-  sauce2_id uuid references sauces(id)
+  sauce2_id uuid references sauces(id),
+  name text,
+  breakfast_item_ids jsonb not null default '[]',
+  snack_item_ids jsonb not null default '[]'
 );
 
 -- Per-day meal assembly + flags

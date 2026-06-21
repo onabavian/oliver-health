@@ -24,6 +24,7 @@ export async function PUT(req: Request) {
     .upsert(
       {
         week_start: weekStart,
+        name: body.name ?? null,
         protein1_id: body.protein1Id || null,
         protein1_method_id: body.protein1MethodId || null,
         protein2_id: body.protein2Id || null,
@@ -34,6 +35,8 @@ export async function PUT(req: Request) {
         veggie2_id: body.veggie2Id || null,
         sauce1_id: body.sauce1Id || null,
         sauce2_id: body.sauce2Id || null,
+        breakfast_item_ids: body.breakfastItemIds ?? [],
+        snack_item_ids: body.snackItemIds ?? [],
       },
       { onConflict: 'week_start' }
     )
